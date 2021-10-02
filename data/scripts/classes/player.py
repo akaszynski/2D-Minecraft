@@ -1,8 +1,13 @@
+import logging
 import pygame
 import os
 
 from ..core_functions import move, distance
 from ...variables import *
+from ...blocks import blocks
+
+LOG = logging.getLogger(__name__)
+
 
 class Player:
 
@@ -31,6 +36,12 @@ class Player:
         self.animation_counter = 0
         self.animation_flip = False
 
+        # block being interacted by player
+        self._current_block = None
+        self._current_block_ticks = 0
+
+        # current user tool
+        self._current_tool = None
 
     def move(self, tile_rects):
         
@@ -80,19 +91,33 @@ class Player:
                         self.selected_block = None
                 else:
                     self.selected_block = None
-                            
 
     def break_block(self, terrain, hotbar):
+        LOG.debug("Breaking block")
         self.current_animation = 'break'
         if self.selected_block and self.selected_block.type != 'air':
-            self.inventory.append(self.selected_block.type)
-            hotbar.add_block_to_slot(self.selected_block.type, 1)
-            terrain.remove_block(self.selected_block.pos)
 
+            # check if the current block is the selected block
+            if self._current_block != self.selected_block:
+                self._current_block = self.selected_block
+                self._current_block_ticks = 0
+
+            self._current_block_ticks += 1
+
+            if self._current_tool is None:
+                btime = blocks[self.selected_block.type].breaking_time_default
+
+            if self._current_block_ticks > btime:
+                self._break_block(terrain, hotbar)
+
+    def _break_block(self, terrain, hotbar):
+        self.inventory.append(self.selected_block.type)
+        hotbar.add_block_to_slot(self.selected_block.type, 1)
+        terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):
         self.current_animation = 'place'
-        if (self.selected_block and self.selected_block.type == 'air'):
+        if self.selected_block and self.selected_block.type == 'air':
             if hotbar.selected_slot_content != []:
                 if hotbar.selected_slot_content[1] > 0:
                     if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):

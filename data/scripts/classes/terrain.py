@@ -5,6 +5,7 @@ from random import randint
 from .block import Block
 from .tree import Tree
 from ...variables import *
+from ...variables import CHUNK_SIZE, TILE_SIZE
 
 p = perlin.Perlin(randint(0, 99999))
 
@@ -15,7 +16,6 @@ class Terrain:
         self.tile_rects = []
         self.placed_blocks = []
         self.loaded_chunks = []
-
 
     def generate_chunk(self, x, y):
         if (x, y) not in [block.chunk for block in self.map]:
@@ -86,13 +86,11 @@ class Terrain:
             if block.chunk == chunk_pos:
                 self.map.remove(block)
 
-
     def remove_block(self, block_pos):
         for i, block in enumerate(self.map):
             if block.pos == block_pos:
                 self.map[i].type = 'air'
                 self.placed_blocks.append(self.map[i])
-
 
     def add_block(self, block_pos, block_type):
         for i, block in enumerate(self.map):
