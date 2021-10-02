@@ -28,8 +28,8 @@ def main(full_screen=False, window_size=(800, 800)):
     clock = pygame.time.Clock()
 
     if full_screen:
-        screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
-        pygame.display.toggle_fullscreen()
+        raise NotImplementedError('Full screen not implemented.')
+        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     else:
         screen = pygame.display.set_mode(window_size)
 
