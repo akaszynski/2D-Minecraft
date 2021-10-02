@@ -15,7 +15,7 @@ class Tree:
 
         y = 0
         for i in range(self.trunk_height):
-            block = Block((self.base_pos[0], self.base_pos[1] - y), 'wood')
+            block = Block((self.base_pos[0], self.base_pos[1] - y), 'oak_log')
             self.blocks.append(block)
             y += TILE_SIZE
 

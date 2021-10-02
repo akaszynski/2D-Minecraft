@@ -4,7 +4,7 @@ import os
 from ...variables import STACK_SIZE
 from ..core_functions import draw_rect_alpha
 
-imgs_dir = 'data/imgs/block_previews'
+imgs_dir = 'data/imgs/blocks'
 
 font = pygame.font.Font('data/fonts/minecraft_font.ttf', 23)
 

@@ -53,7 +53,7 @@ class Terrain:
                     elif target_y == CHUNK_SIZE - height:
                         tile_type = 'grass_block'
                     elif target_y == CHUNK_SIZE - 1 - height and randint(0, 6) == 0 and not chunk_loaded:
-                        tile_type = 'flower'
+                        tile_type = 'tulip'
                     elif target_y == CHUNK_SIZE - 1 - height and randint(0, 3) == 0 and not chunk_loaded:
                         tile_type = 'grass'
                     else:
@@ -73,7 +73,7 @@ class Terrain:
                                         self.placed_blocks.append(tree_block)
                         else:
                             self.map.append(Block((target_x * TILE_SIZE, target_y * TILE_SIZE), tile_type))
-                            if tile_type in ['flower', 'grass']:
+                            if tile_type in ['tulip', 'grass']:
                                 self.placed_blocks.append(Block((target_x * TILE_SIZE, target_y * TILE_SIZE), tile_type))
 
 
@@ -92,10 +92,16 @@ class Terrain:
                 self.map[i].type = 'air'
                 self.placed_blocks.append(self.map[i])
 
+    # def crack_block(self, block_pos):
+    #     for i, block in enumerate(self.map):
+    #         if block.pos == block_pos:
+    #             # self.map[i].type
+    #             # self.placed_blocks.append(self.map[i])
+
     def add_block(self, block_pos, block_type):
         for i, block in enumerate(self.map):
             if block.pos == block_pos:
-                if block_type not in ['flower', 'grass']:
+                if block_type not in ['tulip', 'grass']:
                     if block.type == 'air':
                         self.map[i].type = block_type
                         self.placed_blocks.append(self.map[i])
@@ -114,7 +120,7 @@ class Terrain:
     def generate_hitbox(self):
         self.tile_rects = []
         for block in self.map:
-            if block.type not in ['air', 'grass', 'flower']:
+            if block.type not in ['air', 'grass', 'tulip']:
                 self.tile_rects.append(block.rect)
 
 
@@ -132,7 +138,7 @@ class Terrain:
                 self.generate_chunk(target_x, target_y)
 
         for i, block in enumerate(self.map):
-            if block.type in ['flower', 'grass']:
+            if block.type in ['tulip', 'grass']:
                 for block2 in self.map:
                     if block2.pos == (block.pos[0], block.pos[1] + TILE_SIZE):
                         if block2.type == 'air':
