@@ -1,45 +1,51 @@
+"""
+The base time in seconds is the block's hardness multiplied by 1.5 if
+the player can harvest the block with the current tool, or 5 if the
+player cannot.
+"""
+
 from dataclasses import dataclass
 
 @dataclass
 class Block:
     """Class for Block information."""
-    breaking_time: int  # in ticks
+    hardness: float
 
 
 class Stone(Block):
 
     def __init__(self):
-        self.breaking_time_default = 150
+        self.hardness = 1.5
 
 
 class Air(Block):
 
     def __init__(self):
-        self.breaking_time_default = 0
+        self.hardness = 0
 
 
 class Grass(Block):
 
     def __init__(self):
-        self.breaking_time_default = 1
+        self.hardness = 0
 
 
 class Dirt(Block):
 
     def __init__(self):
-        self.breaking_time_default = 0.75*20
+        self.hardness = 0.5
 
 
 class GrassBlock(Block):
 
     def __init__(self):
-        self.breaking_time_default = 15
+        self.hardness = 0.5
 
 
 class Flower(Block):
 
     def __init__(self):
-        self.breaking_time_default = 1
+        self.hardness = 0
 
 
 class Tulip(Flower):
@@ -49,13 +55,13 @@ class Tulip(Flower):
 class Log(Block):
 
     def __init__(self):
-        self.breaking_time_default = 60
+        self.hardness = 2
 
 
 class Leaf(Block):
 
     def __init__(self):
-        self.breaking_time_default = 1
+        self.hardness = 0.2
 
 
 blocks = {

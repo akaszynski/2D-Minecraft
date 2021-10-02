@@ -92,11 +92,11 @@ class Terrain:
                 self.map[i].type = 'air'
                 self.placed_blocks.append(self.map[i])
 
-    # def crack_block(self, block_pos):
+    # def damage_block(self, block_pos):
     #     for i, block in enumerate(self.map):
     #         if block.pos == block_pos:
-    #             # self.map[i].type
-    #             # self.placed_blocks.append(self.map[i])
+    #             self.map[i].type = 'oak_log'
+    #             self.placed_blocks.append(self.map[i])
 
     def add_block(self, block_pos, block_type):
         for i, block in enumerate(self.map):
@@ -123,11 +123,9 @@ class Terrain:
             if block.type not in ['air', 'grass', 'tulip']:
                 self.tile_rects.append(block.rect)
 
-
     def draw(self, display):
         for block in self.map:
             display.blit(block.img, block.get_scrolled_pos(scroll))
-
 
     def update(self, player):
         self.generate_hitbox()

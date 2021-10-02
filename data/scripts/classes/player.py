@@ -1,6 +1,7 @@
 import logging
 import pygame
 import os
+from math import ceil
 
 from ..core_functions import move, distance
 from ...variables import *
@@ -92,9 +93,18 @@ class Player:
                 else:
                     self.selected_block = None
 
+    def reset_break(self, terrain):
+        if self._current_block is not None:
+            self._current_block.damage = -1
+            self._current_block = None
+
     def break_block(self, terrain, hotbar):
-        LOG.debug("Breaking block")
         self.current_animation = 'break'
+
+        # resets block damage shading
+        if self._current_block != self.selected_block:
+            self.reset_break(terrain)
+
         if self.selected_block and self.selected_block.type != 'air':
 
             # check if the current block is the selected block
@@ -102,13 +112,23 @@ class Player:
                 self._current_block = self.selected_block
                 self._current_block_ticks = 0
 
+            # if self._current_tool is None:
+
+            # The base time in seconds is the block's hardness
+            # multiplied by 1.5 if the player can harvest the
+            # block with the current tool, or 5 if the player
+            # cannot.
+
+            # converting to ticks, that's 30
+            tot_ticks = blocks[self.selected_block.type].hardness*30
+            LOG.debug("Breaking block.")
+            if tot_ticks:
+                self.selected_block.damage = ceil(9*self._current_block_ticks/tot_ticks)
             self._current_block_ticks += 1
 
-            if self._current_tool is None:
-                btime = blocks[self.selected_block.type].breaking_time_default
-
-            if self._current_block_ticks > btime:
+            if self._current_block_ticks >= tot_ticks:
                 self._break_block(terrain, hotbar)
+                self.selected_block.damage = -1
 
     def _break_block(self, terrain, hotbar):
         self.inventory.append(self.selected_block.type)

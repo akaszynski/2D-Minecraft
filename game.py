@@ -31,6 +31,8 @@ def process_actions(player, terrain, hotbar):
         player.place_block(terrain, hotbar)
     elif mouse_held[2]:  # right click for breaking
         player.break_block(terrain, hotbar)
+    else:
+        player.reset_break(terrain)
 
     #######################################################################
 
