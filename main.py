@@ -11,4 +11,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     from game import main
-    main(full_screen=bool(args.full_screen), window_size=(1500, 900))
+    main(full_screen=bool(args.full_screen))

@@ -12,7 +12,7 @@ from data.variables import (
 )
 
 
-def main(full_screen=False, window_size=(800, 800)):
+def main(full_screen=False, window_size=None):
     """Main program loop.
 
     Parameters
@@ -28,10 +28,14 @@ def main(full_screen=False, window_size=(800, 800)):
     clock = pygame.time.Clock()
 
     if full_screen:
-        raise NotImplementedError('Full screen not implemented.')
-        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    else:
-        screen = pygame.display.set_mode(window_size)
+        raise NotImplementedError('Full screen not implemented')
+
+    if window_size is None:
+        # still windowed and not genuinely full screen
+        info = pygame.display.Info()
+        window_size = info.current_w, info.current_h - 50
+
+    screen = pygame.display.set_mode(window_size)
 
     player = Player((0, -200), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13)
     hotbar = Hotbar(window_size)
