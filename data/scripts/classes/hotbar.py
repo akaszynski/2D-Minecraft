@@ -46,7 +46,6 @@ class Hotbar:
             img_name = img.split('.')[0]
             self.block_preview_imgs[img_name] = loaded_img
 
-
     def get_available_slot(self, block_type):
         # First check if there is a slot which the item can be added with another item
         for i, n in self.slot_contents.items():
@@ -59,14 +58,12 @@ class Hotbar:
             if n == []:
                 return i
 
-
     def add_block_to_slot(self, block_type, amount):
         slot = self.get_available_slot(block_type)
         if self.slot_contents[slot] == []:
             self.slot_contents[slot] = [block_type, amount]
         else:
             self.slot_contents[slot][1] += amount
-
 
     def draw(self, display):
         draw_rect_alpha(display, (0, 0, 0, 50), self.base_rect)
@@ -87,7 +84,6 @@ class Hotbar:
                     font_centering_rect = font_render.get_rect()
                     font_centering_rect.bottomright = centering_rect.bottomright
                     display.blit(font_render, font_centering_rect.topleft)
-
 
     def update(self):
         self.selected_slot_content = self.slot_contents[self.selected_slot]

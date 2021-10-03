@@ -7,6 +7,7 @@ import pygame
 from data.scripts.classes.player import Player
 from data.scripts.classes.terrain import Terrain
 from data.scripts.classes.hotbar import Hotbar
+from data.scripts.classes.inventory import Inventory
 
 from data.scripts.core_functions import draw, distance
 from data.variables import (
@@ -19,7 +20,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 
-def process_actions(player, terrain, hotbar):
+def process_actions(player, terrain, hotbar, inventory):
     """Process all actions"""
     # LOG.debug('Process action')
 
@@ -53,6 +54,8 @@ def process_actions(player, terrain, hotbar):
                 player.moving_left = True
             if event.key == pygame.K_d:
                 player.moving_right = True
+            if event.key == pygame.K_e:
+                inventory.toggle()
             if event.key == pygame.K_SPACE or event.key == pygame.K_w:
                 player.jumping = True
 
@@ -112,6 +115,7 @@ def main(full_screen=False, window_size=None):
     player = Player((0, -200), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13)
     hotbar = Hotbar(window_size)
     terrain = Terrain()
+    inventory = Inventory(window_size)
     terrain.generate_chunk(0, 0)
 
     last_action_time = 0
@@ -121,7 +125,7 @@ def main(full_screen=False, window_size=None):
 
         time_since_last_action = time.time() - last_action_time
         if time_since_last_action > MIN_ACTION_TIME:
-            process_actions(player, terrain, hotbar)
+            process_actions(player, terrain, hotbar, inventory)
             last_action_time = time.time()
 
         mx, my = pygame.mouse.get_pos()
@@ -143,4 +147,5 @@ def main(full_screen=False, window_size=None):
         player.update(terrain)
         hotbar.update()
 
-        draw(screen, terrain, player, hotbar)
+        draw(screen, terrain, player, hotbar, inventory)
+ 

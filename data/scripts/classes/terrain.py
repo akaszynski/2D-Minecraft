@@ -1,11 +1,9 @@
-import pygame
 import perlin
 from random import randint
 
 from .block import Block
 from .tree import Tree
-from ...variables import *
-from ...variables import CHUNK_SIZE, TILE_SIZE
+from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll
 
 p = perlin.Perlin(randint(0, 99999))
 
@@ -92,12 +90,6 @@ class Terrain:
                 self.map[i].type = 'air'
                 self.placed_blocks.append(self.map[i])
 
-    # def damage_block(self, block_pos):
-    #     for i, block in enumerate(self.map):
-    #         if block.pos == block_pos:
-    #             self.map[i].type = 'oak_log'
-    #             self.placed_blocks.append(self.map[i])
-
     def add_block(self, block_pos, block_type):
         for i, block in enumerate(self.map):
             if block.pos == block_pos:
@@ -115,7 +107,6 @@ class Terrain:
                                 return True
                             else:
                                 return False
-
 
     def generate_hitbox(self):
         self.tile_rects = []
