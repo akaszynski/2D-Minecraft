@@ -20,6 +20,32 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 
+def quit_game():
+    pygame.quit()
+    sys.exit()
+
+
+def process_inventory(player, terrain, hotbar, inventory):
+    """Process inventory events"""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit_game()
+
+        if event.type == pygame.KEYDOWN:
+
+            # control Q to exit
+            if event.key == pygame.K_q:
+                if pygame.key.get_mods() and pygame.KMOD_CTRL:
+                    quit_game()
+
+            if event.key == pygame.K_e:
+                inventory.toggle()
+                hotbar.toggle()
+
+    mx, my = pygame.mouse.get_pos()
+    # inventory.get_selected_item(mx, my)
+
+
 def process_actions(player, terrain, hotbar, inventory):
     """Process all actions"""
     # LOG.debug('Process action')
@@ -39,16 +65,14 @@ def process_actions(player, terrain, hotbar, inventory):
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+            quit_game()
 
         if event.type == pygame.KEYDOWN:
 
             # control Q to exit
             if event.key == pygame.K_q:
                 if pygame.key.get_mods() and pygame.KMOD_CTRL:
-                    pygame.quit()
-                    sys.exit()
+                    quit_game()
 
             if event.key == pygame.K_a:
                 player.moving_left = True
@@ -56,6 +80,7 @@ def process_actions(player, terrain, hotbar, inventory):
                 player.moving_right = True
             if event.key == pygame.K_e:
                 inventory.toggle()
+                hotbar.toggle()
             if event.key == pygame.K_SPACE or event.key == pygame.K_w:
                 player.jumping = True
 
@@ -125,27 +150,33 @@ def main(full_screen=False, window_size=None):
 
         time_since_last_action = time.time() - last_action_time
         if time_since_last_action > MIN_ACTION_TIME:
-            process_actions(player, terrain, hotbar, inventory)
+
+            # Process inventory events only if inventory visible
+            if inventory.visible:
+                process_inventory(player, terrain, hotbar, inventory)
+            else:
+                process_actions(player, terrain, hotbar, inventory)
             last_action_time = time.time()
 
-        mx, my = pygame.mouse.get_pos()
+        # Process player and terrain only if inventory hidden
+        if not inventory.visible:
+            mx, my = pygame.mouse.get_pos()
 
-        scroll[0] += int(
-            (player.rect.x - scroll[0] - (window_size[0]/2 + player.width/2 - 50)) / SCROLL_STIFF
-        )
-        scroll[1] += int(
-            (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100)) / SCROLL_STIFF
-        )
+            scroll[0] += int(
+                (player.rect.x - scroll[0] - (window_size[0]/2 + player.width/2 - 50)) / SCROLL_STIFF
+            )
+            scroll[1] += int(
+                (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100)) / SCROLL_STIFF
+            )
 
-        for chunk in list(set([i.chunk for i in terrain.map])):
-            if distance(player.current_chunk, chunk) >= RENDER_DISTANCE:
-                terrain.unload_chunk(chunk)
+            for chunk in list(set([i.chunk for i in terrain.map])):
+                if distance(player.current_chunk, chunk) >= RENDER_DISTANCE:
+                    terrain.unload_chunk(chunk)
 
-        player.get_selected_block(terrain, mx, my)
-
-        terrain.update(player)
-        player.update(terrain)
-        hotbar.update()
+            player.get_selected_block(terrain, mx, my)
+            terrain.update(player)
+            player.update(terrain)
+            hotbar.update()
 
         draw(screen, terrain, player, hotbar, inventory)
  

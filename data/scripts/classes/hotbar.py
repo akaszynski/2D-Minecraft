@@ -11,6 +11,7 @@ font = pygame.font.Font('data/fonts/minecraft_font.ttf', 23)
 class Hotbar:
 
     def __init__(self, window_size):
+        self._show = True
         self.width = window_size[0]//3
         self.height = self.width//9
         self.slot_width = self.width//9
@@ -65,7 +66,14 @@ class Hotbar:
         else:
             self.slot_contents[slot][1] += amount
 
+    def toggle(self):
+        self._show = not self._show
+
     def draw(self, display):
+        if self._show:
+            self._draw(display)
+
+    def _draw(self, display):
         draw_rect_alpha(display, (0, 0, 0, 50), self.base_rect)
         for index, rect in self.slot_rects.items():
             if index != self.selected_slot:

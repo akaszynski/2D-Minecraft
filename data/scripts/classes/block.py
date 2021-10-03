@@ -6,6 +6,7 @@ from ...variables import TILE_SIZE
 pygame.init()
 pygame.display.set_mode()
 
+
 imgs_dir = 'data/imgs/blocks'
 
 block_imgs = {}
