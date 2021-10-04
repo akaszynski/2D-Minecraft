@@ -88,7 +88,7 @@ class Player:
         my += scroll[1]
         selected_coords = (mx//TILE_SIZE, my//TILE_SIZE)
 
-        for block in terrain.map:
+        for block in terrain:
             if selected_coords == block.coords:
                 if distance(selected_coords, self.coords) <= self.reach_distance:
                     if not block.rect.colliderect(self.rect):
@@ -200,6 +200,6 @@ class Player:
         self.coords = (self.rect.x//TILE_SIZE, self.rect.y//TILE_SIZE)
         self.pixel_coords = (self.coords[0] * TILE_SIZE, self.coords[1] * TILE_SIZE)
 
-        for block in terrain.map:
+        for block in terrain:
             if self.coords == block.coords:
                 self.current_chunk = block.chunk

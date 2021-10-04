@@ -25,6 +25,9 @@ class Chunk:
         self._generate_trees()
         self._generate_terrain(chunk_loaded)
 
+    def __iter__(self):
+        return iter(self.map)
+
     def _generate_trees(self):
         for target_y in range(MAX_HEIGHT):
             for x_pos in range(CHUNK_SIZE):

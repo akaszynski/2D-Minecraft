@@ -19,65 +19,54 @@ NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'oak_log', 'leaf']
 class Terrain:
 
     def __init__(self):
-        self.map = []
         self.tile_rects = []
         self.placed_blocks = []
-        self.chunks = {}
-        self.active_chunks = set()
-
-    # @property
-    # def map(self):
-    #     for chunk in self.chunks.items:
-    #         yield chunk.map
-
-    def unload_chunk(self, chunk_pos):
-        for block in self.map:
-            if block.chunk == chunk_pos:
-                self.map.remove(block)
+        self.chunks = {}  # all chunks
+        self.active_chunks = {}
 
     def remove_block(self, block_pos):
-        for i, block in enumerate(self.map):
+        for block in self:
             if block.pos == block_pos:
-                self.map[i].type = 'air'
-                self.placed_blocks.append(self.map[i])
+                block.type = 'air'
+                self.placed_blocks.append(block)
+
+    def __iter__(self):
+        for chunk in self.active_chunks.values():
+            for block in chunk:
+                yield block
 
     def add_block(self, block_pos, block_type):
-        for i, block in enumerate(self.map):
+        for block in self:
             if block.pos == block_pos:
                 if block_type not in ['tulip', 'grass']:
                     if block.type == 'air':
-                        self.map[i].type = block_type
-                        self.placed_blocks.append(self.map[i])
+                        block.type = block_type
+                        self.placed_blocks.append(block)
                         return True
                 else:
-                    for block2 in self.map:
+                    for block2 in self:
                         if block2.pos == (block_pos[0], block_pos[1] + TILE_SIZE):
                             if block2.type != 'air':
-                                self.map[i].type = block_type
-                                self.placed_blocks.append(self.map[i])
+                                block.type = block_type
+                                self.placed_blocks.append(block)
                                 return True
                             else:
                                 return False
 
     def generate_hitbox(self, player):
-        rects = [block.rect for block in self.map if block.type not in NON_COL_BLOCKS]
+        rects = [block.rect for block in self if block.type not in NON_COL_BLOCKS]
         self.tile_rects = rects
 
     def draw(self, display):
-        # LOG.debug("map size %d", len(self.map))
-        for block in self.map:
+        for block in self:
             display.blit(block.img, block.get_scrolled_pos(scroll))
 
     def generate_chunk(self, x):
         """Generate chunk"""
-        # if x not in self.loaded_chunks:
         chunk_loaded = False
         chunk = Chunk(x, chunk_loaded)
-        self.map.extend(chunk.map)
         self.chunks[x] = chunk
-
-    def load_chunk(self, x):
-        self.map.extend(self.chunks[x].map)
+        self.active_chunks[x] = chunk
 
     def update(self, player):
         self.generate_hitbox(player)
@@ -90,14 +79,13 @@ class Terrain:
                 if target_x not in self.chunks:
                     self.generate_chunk(target_x)
                 else:
-                    self.load_chunk(target_x)
-            self.active_chunks.add(target_x)
+                    print('activating', target_x)
+                    self.active_chunks[target_x] = self.chunks[target_x]
 
         # remove any chunks no longer active
-        extra_chunks = self.active_chunks - target_chunks
+        extra_chunks = set(self.active_chunks) - target_chunks
         for chunk in extra_chunks:
-            self.unload_chunk(chunk)
-        self.active_chunks = target_chunks
+            del self.active_chunks[chunk]
 
         # # remove placed blocks if air below
         # for i, block in enumerate(self.map):

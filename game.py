@@ -169,9 +169,7 @@ def main(full_screen=False, window_size=None):
                 (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100)) / SCROLL_STIFF
             )
 
-            for chunk in list(set([i.chunk for i in terrain.map])):
-                if distance(player.current_chunk, chunk) >= RENDER_DISTANCE:
-                    terrain.unload_chunk(chunk)
+            # consider unloading world blocks here
 
             player.get_selected_block(terrain, mx, my)
             terrain.update(player)
