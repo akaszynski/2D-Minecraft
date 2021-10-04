@@ -1,11 +1,20 @@
+import logging
 import perlin
 from random import randint
 
 from .block import Block
-from .tree import Tree
-from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll
+from .chunk import Chunk
+from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE
 
 p = perlin.Perlin(randint(0, 99999))
+
+LOG = logging.getLogger(__name__)
+LOG.setLevel('DEBUG')
+
+# blocks with no colisions
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'oak_log', 'leaf']
+
+
 
 class Terrain:
 
@@ -13,71 +22,13 @@ class Terrain:
         self.map = []
         self.tile_rects = []
         self.placed_blocks = []
-        self.loaded_chunks = []
+        self.chunks = {}
+        self.active_chunks = set()
 
-    def generate_chunk(self, x, y):
-        if (x, y) not in [block.chunk for block in self.map]:
-            tree_blocks = []
-            chunk_loaded = (x, y) in self.loaded_chunks
-
-            for y_pos in range(CHUNK_SIZE):
-                for x_pos in range(CHUNK_SIZE):
-
-                    target_x = x * CHUNK_SIZE + x_pos
-                    target_y = y * CHUNK_SIZE + y_pos
-
-                    height = p.one(target_x)
-
-                    if target_y == CHUNK_SIZE - 1 - height and randint(0, 6) == 0:
-                        tree = Tree((target_x * TILE_SIZE, target_y * TILE_SIZE))
-                        for tree_block in tree.blocks:
-                            if tree_block.pos not in [i.pos for i in tree_blocks]:
-                                tree_blocks.append(tree_block)
-
-            for y_pos in range(CHUNK_SIZE):
-                for x_pos in range(CHUNK_SIZE):
-
-                    block_added = False
-
-                    target_x = x * CHUNK_SIZE + x_pos
-                    target_y = y * CHUNK_SIZE + y_pos
-
-                    height = p.one(target_x)
-
-                    if target_y > CHUNK_SIZE + 3 - height:
-                        tile_type = 'stone'
-                    elif target_y > CHUNK_SIZE - height:
-                        tile_type = 'dirt'
-                    elif target_y == CHUNK_SIZE - height:
-                        tile_type = 'grass_block'
-                    elif target_y == CHUNK_SIZE - 1 - height and randint(0, 6) == 0 and not chunk_loaded:
-                        tile_type = 'tulip'
-                    elif target_y == CHUNK_SIZE - 1 - height and randint(0, 3) == 0 and not chunk_loaded:
-                        tile_type = 'grass'
-                    else:
-                        tile_type = 'air'
-
-                    for block in self.placed_blocks:
-                        if block.coords == (target_x, target_y):
-                            self.map.append(block)
-                            block_added = True
-
-                    if not block_added:
-                        if (target_x * TILE_SIZE, target_y * TILE_SIZE) in [i.pos for i in tree_blocks]:
-                            if not chunk_loaded:
-                                for tree_block in tree_blocks:
-                                    if tree_block.pos == (target_x * TILE_SIZE, target_y * TILE_SIZE):
-                                        self.map.append(tree_block)
-                                        self.placed_blocks.append(tree_block)
-                        else:
-                            self.map.append(Block((target_x * TILE_SIZE, target_y * TILE_SIZE), tile_type))
-                            if tile_type in ['tulip', 'grass']:
-                                self.placed_blocks.append(Block((target_x * TILE_SIZE, target_y * TILE_SIZE), tile_type))
-
-
-            if not chunk_loaded:
-                self.loaded_chunks.append((x, y))
-
+    # @property
+    # def map(self):
+    #     for chunk in self.chunks.items:
+    #         yield chunk.map
 
     def unload_chunk(self, chunk_pos):
         for block in self.map:
@@ -108,31 +59,69 @@ class Terrain:
                             else:
                                 return False
 
-    def generate_hitbox(self):
-        self.tile_rects = []
-        for block in self.map:
-            if block.type not in ['air', 'grass', 'tulip']:
-                self.tile_rects.append(block.rect)
+    def generate_hitbox(self, player):
+        rects = [block.rect for block in self.map if block.type not in NON_COL_BLOCKS]
+        self.tile_rects = rects
 
     def draw(self, display):
+        # LOG.debug("map size %d", len(self.map))
         for block in self.map:
             display.blit(block.img, block.get_scrolled_pos(scroll))
 
-    def update(self, player):
-        self.generate_hitbox()
-        for y in range(RENDER_DISTANCE):
-            for x in range(RENDER_DISTANCE):
-                target_x = x + player.current_chunk[0] - RENDER_DISTANCE//2
-                target_y = y + player.current_chunk[1] - RENDER_DISTANCE//2
-                self.generate_chunk(target_x, target_y)
+    def generate_chunk(self, x):
+        """Generate chunk"""
+        # if x not in self.loaded_chunks:
+        chunk_loaded = False
+        chunk = Chunk(x, chunk_loaded)
+        self.map.extend(chunk.map)
+        self.chunks[x] = chunk
 
-        for i, block in enumerate(self.map):
-            if block.type in ['tulip', 'grass']:
-                for block2 in self.map:
-                    if block2.pos == (block.pos[0], block.pos[1] + TILE_SIZE):
-                        if block2.type == 'air':
-                            try:
-                                self.placed_blocks.remove(self.map[i])
-                            except ValueError:
-                                pass
-                            self.map[i].type = 'air'
+    def load_chunk(self, x):
+        self.map.extend(self.chunks[x].map)
+
+    def update(self, player):
+        self.generate_hitbox(player)
+
+        target_chunks = set()
+        for x in range(RENDER_DISTANCE):
+            target_x = x + player.current_chunk[0] - RENDER_DISTANCE//2
+            target_chunks.add(target_x)
+            if target_x not in self.active_chunks:
+                if target_x not in self.chunks:
+                    self.generate_chunk(target_x)
+                else:
+                    self.load_chunk(target_x)
+            self.active_chunks.add(target_x)
+
+        # remove any chunks no longer active
+        extra_chunks = self.active_chunks - target_chunks
+        for chunk in extra_chunks:
+            self.unload_chunk(chunk)
+        self.active_chunks = target_chunks
+
+        # # remove placed blocks if air below
+        # for i, block in enumerate(self.map):
+        #     if block.type in ['tulip', 'grass']:
+        #         for block2 in self.map:
+        #             if block2.pos == (block.pos[0], block.pos[1] + TILE_SIZE):
+        #                 if block2.type == 'air':
+        #                     try:
+        #                         self.placed_blocks.remove(self.map[i])
+        #                     except ValueError:
+        #                         pass
+        #                     self.map[i].type = 'air'
+
+        # print(self.map[0].coords)
+
+        # compute lighting
+        # for i, block in enumerate(self.map):
+        #     if not block.visible:
+        #         breakpoint()
+
+    # def block_below(self, block):
+    #     """Return the block below the given block if loaded"""
+    #     if block.coords[1] == 0:
+    #         # chunk_below(self, 0):
+            
+
+    # def chunk_below(self, 0):

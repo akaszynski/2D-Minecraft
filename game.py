@@ -141,7 +141,7 @@ def main(full_screen=False, window_size=None):
     hotbar = Hotbar(window_size)
     terrain = Terrain()
     inventory = Inventory(window_size)
-    terrain.generate_chunk(0, 0)
+    terrain.generate_chunk(0)
 
     last_action_time = 0
     while True:

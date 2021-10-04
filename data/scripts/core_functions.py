@@ -1,8 +1,16 @@
 import pygame
-import math
+
+COLLISION_TYPES = {
+    'top': False,
+    'bottom': False,
+    'right': False,
+    'left': False
+}
+
 
 def draw(display, *classes):
-    display.fill((227, 247, 255))
+    # this is the background color
+    display.fill((135, 206, 235))  # skyblue
 
     for item in classes:
         if isinstance(item, list):
@@ -14,8 +22,9 @@ def draw(display, *classes):
 
     pygame.display.update()
 
+
 def move(rect, tiles, movement):
-    collision_types = {'top':False,'bottom':False,'right':False,'left':False}
+    collision_types = COLLISION_TYPES.copy()  # a copy is marginally faster
     rect.x += movement[0]
     hit_list = collision_check(rect, tiles)
     for tile in hit_list:
@@ -50,7 +59,7 @@ def collision_check(rect, tiles):
 def distance(pos1, pos2):
     x = (pos2[0] - pos1[0])**2
     y = (pos2[1] - pos1[1])**2
-    return math.sqrt(x + y)
+    return (x + y)**0.5
 
 
 def draw_rect_alpha(display, color, rect):

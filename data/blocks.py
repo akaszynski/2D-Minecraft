@@ -6,46 +6,54 @@ player cannot.
 
 from dataclasses import dataclass
 
+
 @dataclass
 class Block:
     """Class for Block information."""
     hardness: float
+    harvest: list
 
 
 class Stone(Block):
 
     def __init__(self):
         self.hardness = 1.5
+        self.harvest = ['pickaxe']
 
 
 class Air(Block):
 
     def __init__(self):
         self.hardness = 0
+        self.harvest = [None]
 
 
 class Grass(Block):
 
     def __init__(self):
         self.hardness = 0
+        self.harvest = [None]
 
 
 class Dirt(Block):
 
     def __init__(self):
         self.hardness = 0.5
+        self.harvest = [None, 'shovel']
 
 
 class GrassBlock(Block):
 
     def __init__(self):
         self.hardness = 0.5
+        self.harvest = [None, 'shovel']
 
 
 class Flower(Block):
 
     def __init__(self):
         self.hardness = 0
+        self.harvest = [None]
 
 
 class Tulip(Flower):
@@ -56,12 +64,14 @@ class Log(Block):
 
     def __init__(self):
         self.hardness = 2
+        self.harvest = [None, 'axe']
 
 
 class Leaf(Block):
 
     def __init__(self):
         self.hardness = 0.2
+        self.harvest = [None, 'hoe']
 
 
 blocks = {

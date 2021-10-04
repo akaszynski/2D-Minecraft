@@ -5,6 +5,7 @@ from math import ceil
 
 from ..core_functions import move, distance
 from ...variables import *
+from ...variables import GRAVITY_STRENGTH, TILE_SIZE
 from ...blocks import blocks
 
 LOG = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ class Player:
         self.movement = [0, 0]
         self.selected_block = None
         self.current_chunk = (0, 0)
+        self._previous_chunk = None
         self.inventory = []
 
         self.current_animation = 'idle'
@@ -75,8 +77,11 @@ class Player:
             self.current_animation = 'idle'
 
         if self.movement[1] > 30:
-             self.movement[1] = 30
+            self.movement[1] = 30
 
+        if self.current_chunk != self._previous_chunk:
+            LOG.debug("Player now at chunk (%d, %d)", *self.current_chunk)
+            self._previous_chunk = self.current_chunk
 
     def get_selected_block(self, terrain, mx, my):
         mx += scroll[0]
@@ -112,15 +117,20 @@ class Player:
                 self._current_block = self.selected_block
                 self._current_block_ticks = 0
 
-            # if self._current_tool is None:
-
             # The base time in seconds is the block's hardness
             # multiplied by 1.5 if the player can harvest the
             # block with the current tool, or 5 if the player
             # cannot.
 
+            # base time in ticks is 20 times the above
+
             # converting to ticks, that's 30
-            tot_ticks = blocks[self.selected_block.type].hardness*30
+            block = blocks[self.selected_block.type]
+            if self._current_tool in block.harvest:
+                tot_ticks = block.hardness*30
+            else:
+                tot_ticks = block.hardness*100
+
             LOG.debug("Breaking block.")
             if tot_ticks:
                 self.selected_block.damage = ceil(9*self._current_block_ticks/tot_ticks)
@@ -131,8 +141,9 @@ class Player:
                 self.selected_block.damage = -1
 
     def _break_block(self, terrain, hotbar):
-        self.inventory.append(self.selected_block.type)
-        hotbar.add_block_to_slot(self.selected_block.type, 1)
+        if self._current_tool in blocks[self.selected_block.type].harvest:
+            self.inventory.append(self.selected_block.type)
+            hotbar.add_block_to_slot(self.selected_block.type, 1)
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):

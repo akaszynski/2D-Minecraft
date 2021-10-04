@@ -32,6 +32,7 @@ class Block:
         self.chunk = (self.coords[0] >> 3, self.coords[1] >> 3)
         self.rect = pygame.Rect(self.x, self.y, TILE_SIZE, TILE_SIZE)
         self._damage = -1
+        self._visible = True
 
     @property
     def damage(self):
@@ -47,6 +48,8 @@ class Block:
 
     @property
     def img(self):
+        if not self.visible:
+            return block_imgs['black']
         img = block_imgs[self.type]
         if self.damage == -1:
             return img
@@ -64,4 +67,7 @@ class Block:
     def get_scrolled_pos(self, scroll):
         pos = (self.x - scroll[0], self.y - scroll[1])
         return pos
-        
+
+    @property
+    def visible(self):
+        return self._visible
