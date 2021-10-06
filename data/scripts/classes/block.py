@@ -29,7 +29,7 @@ class Block:
         self.x = pos[0]
         self.y = pos[1]
         self.coords = (self.x//TILE_SIZE, self.y//TILE_SIZE)
-        self.chunk = (self.coords[0] >> 3, self.coords[1] >> 3)
+        self.chunk = self.coords[0] >> 3
         self.rect = pygame.Rect(self.x, self.y, TILE_SIZE, TILE_SIZE)
         self._damage = -1
         self._visible = True

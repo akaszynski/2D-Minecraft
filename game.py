@@ -111,8 +111,7 @@ def process_actions(player, terrain, hotbar, inventory):
                     hotbar.selected_slot = 9
 
 
-
-def main(full_screen=False, window_size=None):
+def main(full_screen=False, window_size=None, creative=False):
     """Main program loop.
 
     Parameters
@@ -137,16 +136,19 @@ def main(full_screen=False, window_size=None):
 
     screen = pygame.display.set_mode(window_size)
 
-    player = Player((0, -200), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13)
-    hotbar = Hotbar(window_size)
     terrain = Terrain()
+    start_x = 0
+    start_y = terrain.ground_level(start_x)
+
+    player = Player(
+        (start_x, start_y), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13, creative=creative
+    )
+    hotbar = Hotbar(window_size)
     inventory = Inventory(window_size)
-    terrain.generate_chunk(0)
 
     last_action_time = 0
     while True:
         clock.tick(60)
-        pygame.display.set_caption(str(int(clock.get_fps())))
 
         time_since_last_action = time.time() - last_action_time
         if time_since_last_action > MIN_ACTION_TIME:
@@ -177,4 +179,5 @@ def main(full_screen=False, window_size=None):
             hotbar.update()
 
         draw(screen, terrain, player, hotbar, inventory)
- 
+
+        # print(str(int(clock.get_fps())))

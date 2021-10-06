@@ -1,40 +1,64 @@
+import logging
 from random import randint
-import perlin
+
+from perlin import Perlin
+import numpy as np
 
 from .block import Block
 from .tree import Tree
-from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT
+from ...variables import (
+    CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT, SEED
+)
 
-p = perlin.Perlin(randint(0, 99999))
+from . import generator
 
-import logging
+WATER_LEVEL = 63
+
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
+LOG.info('Using seed %d', SEED)
+P_NOISE = Perlin(SEED)
+
 
 class Chunk:
 
-    def __init__(self, x, chunk_loaded):
+    def __init__(self, x, chunk_loaded=False, trees=False):
         LOG.debug("Creating chunk at %d", x)
         self.map = []
         self._tree_blocks = []
         self.placed_blocks = []
         self._x = x
+        self.shape = (CHUNK_SIZE, MAX_HEIGHT)
 
-        self._generate_trees()
+        if trees:
+            self._generate_trees()
         self._generate_terrain(chunk_loaded)
 
     def __iter__(self):
         return iter(self.map)
 
-    def _generate_trees(self):
-        for target_y in range(MAX_HEIGHT):
-            for x_pos in range(CHUNK_SIZE):
+    def __getitem__(self, tup):
+        if len(tup) == 1:
+            return self.map(tup[0])
+        elif len(tup) == 2:
+            return self.map(tup[0] + tup[0]*self.shape[1])
+        else:
+            raise IndexError('Only 1 or 2D indexing available')
 
+    def ground_level(self, x):
+        """Get the first block that is not air"""
+        for block in self.map[x*MAX_HEIGHT: (x + 1)*MAX_HEIGHT][::-1]:
+            if block.type != 'air':
+                return block.pos[1]//TILE_SIZE
+
+    def _generate_trees(self):
+        for target_y in range(self.shape[1]):
+            for x_pos in range(self.shape[0]):
                 target_x = self._x * CHUNK_SIZE + x_pos
 
-                height = p.one(target_x)
+                height = P_NOISE.one(target_x)
 
                 if target_y == CHUNK_SIZE - 1 - height and randint(0, 6) == 0:
                     tree = Tree((target_x * TILE_SIZE, target_y * TILE_SIZE))
@@ -42,7 +66,52 @@ class Chunk:
                         if tree_block.pos not in [i.pos for i in self._tree_blocks]:
                             self._tree_blocks.append(tree_block)
 
-    def _generate_terrain(self, chunk_loaded):
+    def _generate_terrain(self, *args, **kwargs):
+        x_dim, y_dim = CHUNK_SIZE, MAX_HEIGHT
+
+        # grassland
+        ground_level = generator.ground_level(0.1, SEED, self._x*CHUNK_SIZE,
+                                              x_dim, amp=10)
+
+        coal = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=127,
+        )
+
+        iron = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
+        )
+
+        for x in range(x_dim):
+            ground = ground_level[x]
+            for y in range(y_dim)[::-1]:
+                if y == MAX_HEIGHT - 1:
+                    tile_type = 'bedrock'
+                elif y < ground:
+                    if y > WATER_LEVEL:
+                        tile_type = 'water'
+                    else:
+                        tile_type = 'air'
+                elif y == ground:
+                    if y - 2 < WATER_LEVEL:
+                        tile_type = 'grass_block'
+                    else:
+                        tile_type = 'dirt'
+                elif y < ground + 3:
+                    tile_type = 'dirt'
+                else:
+                    flat_ind = y*x_dim + x
+                    if flat_ind in iron:
+                        tile_type = 'iron_ore'
+                    elif flat_ind in coal:
+                        tile_type = 'coal_ore'
+                    else:
+                        tile_type = 'stone'
+
+                target_x = self._x*CHUNK_SIZE + x
+                block = Block((target_x*TILE_SIZE, y*TILE_SIZE), tile_type)
+                self.map.append(block)
+
+    def _generate_terrain_old(self, chunk_loaded):
 
         for target_y in range(MAX_HEIGHT):
             for x_pos in range(CHUNK_SIZE):
@@ -50,7 +119,7 @@ class Chunk:
                 block_added = False
                 target_x = self._x * CHUNK_SIZE + x_pos
 
-                height = p.one(target_x)
+                height = P_NOISE.one(target_x)
 
                 if target_y > CHUNK_SIZE + 3 - height:
                     tile_type = 'stone'
@@ -82,3 +151,7 @@ class Chunk:
                         self.map.append(block)
                         if tile_type in ['tulip', 'grass']:
                             self.placed_blocks.append(Block((target_x * TILE_SIZE, target_y * TILE_SIZE), tile_type))
+
+
+# if __name__ == '__main__':
+#     chunk = Chunk()

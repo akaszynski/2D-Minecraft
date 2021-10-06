@@ -14,6 +14,13 @@ class Block:
     harvest: list
 
 
+class Bedrock(Block):
+
+    def __init__(self):
+        self.hardness = -1
+        self.harvest = [None]
+
+
 class Stone(Block):
 
     def __init__(self):
@@ -21,7 +28,28 @@ class Stone(Block):
         self.harvest = ['pickaxe']
 
 
+class CoalOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
+
+class IronOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
+
 class Air(Block):
+
+    def __init__(self):
+        self.hardness = 0
+        self.harvest = [None]
+
+
+class Water(Block):
 
     def __init__(self):
         self.hardness = 0
@@ -83,5 +111,8 @@ blocks = {
     'tulip': Tulip(),
     'oak_log': Log(),
     'leaf': Leaf(),
-
+    'bedrock': Bedrock(),
+    'coal_ore': CoalOre(),
+    'iron_ore': IronOre(),
+    'water': Water(),
 }
