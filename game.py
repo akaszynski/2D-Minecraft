@@ -138,11 +138,14 @@ def main(full_screen=False, window_size=None, creative=False):
 
     terrain = Terrain()
     start_x = 0
-    start_y = terrain.ground_level(start_x)
+    start_y = terrain.ground_level(start_x) - 2
 
     player = Player(
         (start_x, start_y), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13, creative=creative
     )
+    scroll[0] = (player.rect.x - scroll[0] - (window_size[0]/2 + player.width/2 - 50))
+    scroll[1] = (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100))
+
     hotbar = Hotbar(window_size)
     inventory = Inventory(window_size)
 
@@ -170,7 +173,6 @@ def main(full_screen=False, window_size=None, creative=False):
             scroll[1] += int(
                 (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100)) / SCROLL_STIFF
             )
-
             # consider unloading world blocks here
 
             player.get_selected_block(terrain, mx, my)

@@ -7,7 +7,8 @@ import numpy as np
 from .block import Block
 from .tree import Tree
 from ...variables import (
-    CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT, SEED
+    CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT, SEED,
+    scroll
 )
 
 from . import generator
@@ -24,32 +25,64 @@ P_NOISE = Perlin(SEED)
 
 class Chunk:
 
-    def __init__(self, x, chunk_loaded=False, trees=False):
+    def __init__(self, x, world, chunk_loaded=False, trees=False):
         LOG.debug("Creating chunk at %d", x)
         self.map = []
         self._tree_blocks = []
         self.placed_blocks = []
         self._x = x
         self.shape = (CHUNK_SIZE, MAX_HEIGHT)
+        self._world = world
 
         if trees:
             self._generate_trees()
         self._generate_terrain(chunk_loaded)
 
+    def draw(self, display):
+        for block in self:
+            if block.light:
+                display.blit(block.img, block.get_scrolled_pos(scroll))
+            else:
+                display.blit(block.img, block.get_scrolled_pos(scroll))
+
+    @property
+    def left(self):
+        """Chunk to the left"""
+        self._world.chunks.get(self._x - 1)
+
+    @property
+    def right(self):
+        """Chunk to the right"""
+        self._world.chunks.get(self._x + 1)
+
     def __iter__(self):
         return iter(self.map)
 
-    def __getitem__(self, tup):
-        if len(tup) == 1:
-            return self.map(tup[0])
-        elif len(tup) == 2:
-            return self.map(tup[0] + tup[0]*self.shape[1])
+    def __getitem__(self, index):
+
+        if isinstance(index, int):
+            return self.map
+        if len(index) == 1:
+            return self.map(index[0])
+        elif len(index) == 2:
+            return self.map[index[0] + index[1]*self.shape[0]]
         else:
             raise IndexError('Only 1 or 2D indexing available')
 
+    def update_sky_lighting(self):
+        for x in range(CHUNK_SIZE):
+            for block in self.vertical_stack(x):
+                if block.type not in ['air', 'water']:
+                    break
+                block.illumination = 15
+
+    def vertical_stack(self, x):
+        """Return a vertical strip of blocks"""
+        return self.map[x::CHUNK_SIZE]
+
     def ground_level(self, x):
         """Get the first block that is not air"""
-        for block in self.map[x*MAX_HEIGHT: (x + 1)*MAX_HEIGHT][::-1]:
+        for block in self.vertical_stack(x):
             if block.type != 'air':
                 return block.pos[1]//TILE_SIZE
 
@@ -81,34 +114,36 @@ class Chunk:
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
         )
 
-        for x in range(x_dim):
-            ground = ground_level[x]
-            for y in range(y_dim)[::-1]:
+        for y in range(y_dim):
+            for x in range(x_dim):
+                ground = ground_level[x]
+                tile_type = 'air'
                 if y == MAX_HEIGHT - 1:
                     tile_type = 'bedrock'
-                elif y < ground:
-                    if y > WATER_LEVEL:
-                        tile_type = 'water'
-                    else:
-                        tile_type = 'air'
+                elif y < ground and y > WATER_LEVEL:
+                    tile_type = 'water'
                 elif y == ground:
-                    if y - 2 < WATER_LEVEL:
+                    if y < WATER_LEVEL + 2:
                         tile_type = 'grass_block'
                     else:
                         tile_type = 'dirt'
-                elif y < ground + 3:
-                    tile_type = 'dirt'
-                else:
-                    flat_ind = y*x_dim + x
-                    if flat_ind in iron:
-                        tile_type = 'iron_ore'
-                    elif flat_ind in coal:
-                        tile_type = 'coal_ore'
+                elif y > ground:
+                    if y < ground + 3:
+                        tile_type = 'dirt'
                     else:
                         tile_type = 'stone'
+                        flat_ind = y*x_dim + x
+                        if flat_ind in iron:
+                            tile_type = 'iron_ore'
+                        elif flat_ind in coal:
+                            tile_type = 'coal_ore'
+                        else:
+                            tile_type = 'stone'
 
                 target_x = self._x*CHUNK_SIZE + x
-                block = Block((target_x*TILE_SIZE, y*TILE_SIZE), tile_type)
+                block = Block(
+                    (target_x*TILE_SIZE, y*TILE_SIZE), tile_type, self, (x, y)
+                )
                 self.map.append(block)
 
     def _generate_terrain_old(self, chunk_loaded):

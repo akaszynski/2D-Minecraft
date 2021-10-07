@@ -223,7 +223,6 @@ class Player:
 
         if self.coords != self._previous_coords:
             LOG.debug("Coordinates now (%d, %d)", *self.coords)
-            LOG.debug("Bounds (%d, %d)", *self._chunk_bounds)
             self._previous_coords = self.coords
 
         if self.current_chunk != self._previous_chunk:

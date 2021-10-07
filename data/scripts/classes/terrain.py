@@ -7,6 +7,7 @@ from .block import Block
 from .chunk import Chunk
 from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE
 from ...variables import RENDER_DISTANCE as RDIST
+from ..core_functions import distance
 
 p = perlin.Perlin(randint(0, 99999))
 
@@ -37,6 +38,7 @@ class Terrain:
         self.active_chunks = {}
         self._future_chunks = {}
         self._threaded = threaded
+        self._lighting_changed = True
 
         # initialze world
         if initialize and threaded:
@@ -57,6 +59,7 @@ class Terrain:
             if block.pos == block_pos:
                 block.type = 'air'
                 self.placed_blocks.append(block)
+                self._lighting_changed = True
 
     def __iter__(self):
         for chunk in self.active_chunks.values():
@@ -70,6 +73,7 @@ class Terrain:
                     if block.type in ['air', 'water']:
                         block.type = block_type
                         self.placed_blocks.append(block)
+                        self._lighting_changed = True
                         return True
                 else:
                     for block2 in self:
@@ -86,16 +90,15 @@ class Terrain:
         self.tile_rects = rects
 
     def draw(self, display):
-        for block in self:
-            display.blit(block.img, block.get_scrolled_pos(scroll))
+        for chunk in self.active_chunks.values():
+            chunk.draw(display)
 
     def generate_chunk(self, x):
         """Generate chunk"""
         if x in self._future_chunks:
             self._future_chunks[x].join()
         else:
-            chunk_loaded = False
-            self.chunks[x] = Chunk(x, chunk_loaded)
+            self.chunks[x] = Chunk(x, self, False)
 
         self.active_chunks[x] = self.chunks[x]
 
@@ -103,8 +106,7 @@ class Terrain:
     def generate_chunk_background(self, x):
         """Generate chunk in the background"""
         LOG.debug('Generating chunk %d in background thread', x)
-        chunk_loaded = False
-        self.chunks[x] = Chunk(x, chunk_loaded)
+        self.chunks[x] = Chunk(x, self, False)
 
     def ground_level(self, x):
         """Return the ground level at a position"""
@@ -137,11 +139,38 @@ class Terrain:
                 if xx not in self.chunks and xx not in self._future_chunks:
                     self._future_chunks[xx] = self.generate_chunk_background(xx)
 
+    # def _update_visibility(self, player):
+    #     for block in self:
+    #         if abs(block.coords[0] - player.coords[0]) < 2:
+    #             ydist = block.coords[1] - player.coords[1]
+    #             if ydist < 3 and ydist > -2:
+    #                 block.visited = True
+
+    def _update_lighting(self, force=False):
+        if self._lighting_changed or force:
+            for block in self:
+                block.illumination = 0
+                block.light = 0
+
+            LOG.debug('Updating lighting')
+            for chunk in self.chunks.values():
+                chunk.update_sky_lighting()
+
+            for block in self:
+                if block.illumination:
+                    block.flood_light()
+
+            self._lighting_changed = False
+
     def update(self, player):
         self.generate_hitbox(player)
 
         if player.chunk_changed:
+            LOG.debug('Chunk changed')
             self._update_chunks(player.current_chunk)
+            self._lighting_changed = True
+
+        self._update_lighting()
 
         # # remove placed blocks if air below
         # for i, block in enumerate(self.map):
