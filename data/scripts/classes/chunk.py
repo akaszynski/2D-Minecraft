@@ -80,6 +80,25 @@ class Chunk:
         iron = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
         )
+        
+        diamond = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+        )
+        gold = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+        )
+        lapis = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+        )
+        redstone = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+        )
+        dirt = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=20, max_height=128,
+        )
+        emerald = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=1, max_height=32,
+        )
 
         for x in range(x_dim):
             ground = ground_level[x]
@@ -93,7 +112,7 @@ class Chunk:
                         tile_type = 'air'
                 elif y == ground:
                     if y - 2 < WATER_LEVEL:
-                        tile_type = 'grass_block'
+                        tile_type = 'grass_block_snow'
                     else:
                         tile_type = 'dirt'
                 elif y < ground + 3:
@@ -104,6 +123,18 @@ class Chunk:
                         tile_type = 'iron_ore'
                     elif flat_ind in coal:
                         tile_type = 'coal_ore'
+                    elif flat_ind in diamond:
+                        tile_type = 'diamond_ore'
+                    elif flat_ind in gold:
+                        tile_type = 'gold_ore'
+                    elif flat_ind in lapis:
+                        tile_type = 'lapis_ore'
+                    elif flat_ind in redstone:
+                        tile_type = 'redstone_ore'
+                    elif flat_ind in dirt:
+                        tile_type = 'dirt'
+                    elif flat_ind in emerald:
+                        tile_type = 'emerald_ore'
                     else:
                         tile_type = 'stone'
 

@@ -41,6 +41,36 @@ class IronOre(Block):
         self.hardness = 3
         self.harvest = ['pickaxe']
 
+class DiamondOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
+class EmeraldOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
+class LapisOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+        
+class RedstoneOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
+class GoldOre(Block):
+
+    def __init__(self):
+        self.hardness = 3
+        self.harvest = ['pickaxe']
+
 
 class Air(Block):
 
@@ -76,6 +106,12 @@ class GrassBlock(Block):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
 
+class SnowGrassBlock(Block):
+
+    def __init__(self):
+        self.hardness = 0.5
+        self.harvest = [None, 'shovel']
+
 
 class Flower(Block):
 
@@ -93,6 +129,12 @@ class Log(Block):
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+        
+class Sand(Block):
+
+    def __init__(self):
+        self.hardness = 0.5
+        self.harvest = [None, 'shovel']
 
 
 class Leaf(Block):
@@ -115,4 +157,11 @@ blocks = {
     'coal_ore': CoalOre(),
     'iron_ore': IronOre(),
     'water': Water(),
+    'sand': Sand(),
+    'diamond_ore': DiamondOre(),
+    'gold_ore': GoldOre(),
+    'lapis_ore': LapisOre(),
+    'redstone_ore': RedstoneOre(),
+    'emerald_ore': EmeraldOre(),
+    'grass_block_snow': SnowGrassBlock(),
 }
