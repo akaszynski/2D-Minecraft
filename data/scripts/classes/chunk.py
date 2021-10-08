@@ -70,8 +70,8 @@ class Chunk:
         x_dim, y_dim = CHUNK_SIZE, MAX_HEIGHT
 
         # grassland
-        ground_level = generator.ground_level(0.1, SEED, self._x*CHUNK_SIZE,
-                                              x_dim, amp=10)
+        ground_level = generator.ground_level(0.0175, SEED, self._x*CHUNK_SIZE,
+                                              x_dim, amp=40)
 
         coal = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=127,
@@ -111,8 +111,10 @@ class Chunk:
                     else:
                         tile_type = 'air'
                 elif y == ground:
-                    if y - 2 < WATER_LEVEL:
+                    if y + 20 < WATER_LEVEL:
                         tile_type = 'grass_block_snow'
+                    elif y - 2 < WATER_LEVEL:
+                        tile_type = 'grass_block'
                     else:
                         tile_type = 'dirt'
                 elif y < ground + 3:

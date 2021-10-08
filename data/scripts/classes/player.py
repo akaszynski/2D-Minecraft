@@ -139,7 +139,7 @@ class Player:
                 # converting to ticks, that's 30
                 block = blocks[self.selected_block.type]
                 if self._current_tool in block.harvest:
-                    tot_ticks = block.hardness*30
+                    tot_ticks = block.hardness*10
                 else:
                     tot_ticks = block.hardness*100
 
@@ -155,7 +155,7 @@ class Player:
     def _break_block(self, terrain, hotbar):
         if self._current_tool in blocks[self.selected_block.type].harvest:
             block_type = self.selected_block.type
-            if block_type == 'grass_block':
+            if block_type in ['grass_block', 'grass_block_snow']:
                 block_type = 'dirt'
             self.inventory.append(block_type)
             hotbar.add_block_to_slot(block_type, 1)
