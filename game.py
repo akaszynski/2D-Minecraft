@@ -111,7 +111,7 @@ def process_actions(player, terrain, hotbar, inventory):
                     hotbar.selected_slot = 9
 
 
-def main(full_screen=False, window_size=None, creative=False):
+def main(full_screen=False, window_size=None, creative=False, lighting=True):
     """Main program loop.
 
     Parameters
@@ -136,7 +136,7 @@ def main(full_screen=False, window_size=None, creative=False):
 
     screen = pygame.display.set_mode(window_size)
 
-    terrain = Terrain()
+    terrain = Terrain(lighting=lighting)
     start_x = 0
     start_y = terrain.ground_level(start_x) - 2
 

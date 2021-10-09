@@ -15,6 +15,7 @@ if __name__ == '__main__':
         help="No ticks to break blocks",
         action="store_true"
     )
+    parser.add_argument('--no_lighting', help="disable lighting", action="store_true")
     parser.add_argument('--window_size', nargs='+', type=int)
     parser.add_argument('--seed', type=int)
     parser.add_argument(
@@ -45,4 +46,5 @@ if __name__ == '__main__':
         full_screen=bool(args.full_screen),
         window_size=args.window_size,
         creative=bool(args.creative),
+        lighting=not bool(args.no_lighting)
     )

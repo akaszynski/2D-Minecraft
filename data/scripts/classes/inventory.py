@@ -57,9 +57,9 @@ class Inventory:
             img_name = img.split('.')[0]
             block_imgs[img_name] = loaded_img
 
-        self._inv_surf.blit(block_imgs['leaf'],
-                            (8*tot_scale_x, 142*tot_scale_y),
-                            (0, 0, block_sz, block_sz))
+        # self._inv_surf.blit(block_imgs['leaf'],
+        #                     (8*tot_scale_x, 142*tot_scale_y),
+        #                     (0, 0, block_sz, block_sz))
 
 
         # self.slot_width = self.width//9

@@ -31,7 +31,7 @@ def threaded(func):
 
 class Terrain:
 
-    def __init__(self, initialize=True, threaded=True):
+    def __init__(self, initialize=True, threaded=True, lighting=True):
         self.tile_rects = []
         self.placed_blocks = []
         self.chunks = {}  # all chunks
@@ -39,6 +39,7 @@ class Terrain:
         self._future_chunks = {}
         self._threaded = threaded
         self._lighting_changed = True
+        self._lighting = lighting
 
         # initialze world
         if initialize and threaded:
@@ -170,7 +171,12 @@ class Terrain:
             self._update_chunks(player.current_chunk)
             self._lighting_changed = True
 
-        self._update_lighting()
+        if self._lighting:
+            self._update_lighting()
+        else:
+            for block in self:
+                block.light = 15
+
 
         # # remove placed blocks if air below
         # for i, block in enumerate(self.map):

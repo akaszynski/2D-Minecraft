@@ -103,15 +103,32 @@ class Chunk:
         x_dim, y_dim = CHUNK_SIZE, MAX_HEIGHT
 
         # grassland
-        ground_level = generator.ground_level(0.1, SEED, self._x*CHUNK_SIZE,
-                                              x_dim, amp=10)
+        ground_level = generator.ground_level(0.0175, SEED, self._x*CHUNK_SIZE,
+                                              x_dim, amp=40)
 
         coal = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=127,
         )
-
         iron = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
+        )
+        diamond = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+        )
+        gold = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+        )
+        lapis = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+        )
+        redstone = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+        )
+        dirt = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=20, max_height=128,
+        )
+        emerald = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=1, max_height=32,
         )
 
         for y in range(y_dim):
@@ -123,7 +140,9 @@ class Chunk:
                 elif y < ground and y > WATER_LEVEL:
                     tile_type = 'water'
                 elif y == ground:
-                    if y < WATER_LEVEL + 2:
+                    if y < WATER_LEVEL - 20:
+                        tile_type = 'grass_block_snow'
+                    elif y < WATER_LEVEL + 2:
                         tile_type = 'grass_block'
                     else:
                         tile_type = 'dirt'
@@ -137,8 +156,18 @@ class Chunk:
                             tile_type = 'iron_ore'
                         elif flat_ind in coal:
                             tile_type = 'coal_ore'
-                        else:
-                            tile_type = 'stone'
+                        elif flat_ind in diamond:
+                            tile_type = 'diamond_ore'
+                        elif flat_ind in gold:
+                            tile_type = 'gold_ore'
+                        elif flat_ind in lapis:
+                            tile_type = 'lapis_ore'
+                        elif flat_ind in redstone:
+                            tile_type = 'redstone_ore'
+                        elif flat_ind in dirt:
+                            tile_type = 'dirt'
+                        elif flat_ind in emerald:
+                            tile_type = 'emerald_ore'
 
                 target_x = self._x*CHUNK_SIZE + x
                 block = Block(

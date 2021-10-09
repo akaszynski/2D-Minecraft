@@ -28,18 +28,39 @@ class Stone(Block):
         self.harvest = ['pickaxe']
 
 
-class CoalOre(Block):
-
+class Ore(Block):
+    
     def __init__(self):
         self.hardness = 3
         self.harvest = ['pickaxe']
 
 
-class IronOre(Block):
+class CoalOre(Ore):
+    pass
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
+
+class IronOre(Ore):
+    pass
+
+
+class DiamondOre(Ore):
+    pass
+
+
+class EmeraldOre(Ore):
+    pass
+
+
+class LapisOre(Ore):
+    pass
+
+
+class RedstoneOre(Ore):
+    pass
+
+
+class GoldOre(Ore):
+    pass
 
 
 class Air(Block):
@@ -76,6 +97,12 @@ class GrassBlock(Block):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
 
+class SnowGrassBlock(Block):
+
+    def __init__(self):
+        self.hardness = 0.5
+        self.harvest = [None, 'shovel']
+
 
 class Flower(Block):
 
@@ -93,6 +120,12 @@ class Log(Block):
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+        
+class Sand(Block):
+
+    def __init__(self):
+        self.hardness = 0.5
+        self.harvest = [None, 'shovel']
 
 
 class Leaf(Block):
@@ -115,4 +148,11 @@ blocks = {
     'coal_ore': CoalOre(),
     'iron_ore': IronOre(),
     'water': Water(),
+    'sand': Sand(),
+    'diamond_ore': DiamondOre(),
+    'gold_ore': GoldOre(),
+    'lapis_ore': LapisOre(),
+    'redstone_ore': RedstoneOre(),
+    'emerald_ore': EmeraldOre(),
+    'grass_block_snow': SnowGrassBlock(),
 }
