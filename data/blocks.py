@@ -28,48 +28,39 @@ class Stone(Block):
         self.harvest = ['pickaxe']
 
 
-class CoalOre(Block):
-
+class Ore(Block):
+    
     def __init__(self):
         self.hardness = 3
         self.harvest = ['pickaxe']
 
 
-class IronOre(Block):
+class CoalOre(Ore):
+    pass
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
 
-class DiamondOre(Block):
+class IronOre(Ore):
+    pass
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
 
-class EmeraldOre(Block):
+class DiamondOre(Ore):
+    pass
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
 
-class LapisOre(Block):
+class EmeraldOre(Ore):
+    pass
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
-        
-class RedstoneOre(Block):
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
+class LapisOre(Ore):
+    pass
 
-class GoldOre(Block):
 
-    def __init__(self):
-        self.hardness = 3
-        self.harvest = ['pickaxe']
+class RedstoneOre(Ore):
+    pass
+
+
+class GoldOre(Ore):
+    pass
 
 
 class Air(Block):
