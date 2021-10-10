@@ -164,6 +164,8 @@ class Player:
     def place_block(self, terrain, hotbar):
         self.current_animation = 'place'
         if self.selected_block and self.selected_block.type in ['air', 'water']:
+            # if self.selected_block and self.selected_block.type == 'tnt':
+            #     terrain.remove_block(self.selected_block.pos)
             if hotbar.selected_slot_content != []:
                 if hotbar.selected_slot_content[1] > 0:
                     if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):
@@ -182,8 +184,6 @@ class Player:
         return animation_dict
 
     def draw(self, display):
-        # temp_rect = pygame.Rect(self.rect.x - scroll[0], self.rect.y - scroll[1], self.width, self.height)
-        # pygame.draw.rect(display, 'white', temp_rect)
 
         if self.animation_counter//7 < len(self.animations[self.current_animation]):
             current_img = self.animations[self.current_animation][self.animation_counter//7]

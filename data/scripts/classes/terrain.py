@@ -15,7 +15,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 # blocks with no colisions
-NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'oak_log', 'leaf', 'water']
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water']
 
 
 def threaded(func):

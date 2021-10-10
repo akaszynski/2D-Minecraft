@@ -80,8 +80,8 @@ class Water(Block):
 class Grass(Block):
 
     def __init__(self):
-        self.hardness = 0
-        self.harvest = [None]
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
 
 
 class Dirt(Block):
@@ -107,8 +107,14 @@ class SnowGrassBlock(Block):
 class Flower(Block):
 
     def __init__(self):
-        self.hardness = 0
-        self.harvest = [None]
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+
+class Torch(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
 
 
 class Tulip(Flower):
@@ -120,7 +126,19 @@ class Log(Block):
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+
+class BookShelf(Block):
+
+    def __init__(self):
+        self.hardness = 1.5
+        self.harvest = [None, 'axe']
         
+class TNT(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+
 class Sand(Block):
 
     def __init__(self):
@@ -155,4 +173,7 @@ blocks = {
     'redstone_ore': RedstoneOre(),
     'emerald_ore': EmeraldOre(),
     'grass_block_snow': SnowGrassBlock(),
+    'bookshelf': BookShelf(),
+    'torch': Torch(),
+    'tnt': TNT(),
 }
