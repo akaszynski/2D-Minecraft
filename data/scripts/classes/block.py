@@ -21,7 +21,6 @@ for img in os.listdir(imgs_dir):
     else:
         block_imgs[img_name] = loaded_img
 
-
 def light_level_to_color(light_level):
     return (0, 0, 0, (15 - light_level)*17)
 
@@ -39,7 +38,6 @@ BLACK = pygame.Surface(BLOCK_TEXTURE_SZ)
 BLACK.fill((0, 0, 0))
 
 
-
 def shade_block(img, light_level):
     if light_level == 15:
         return img.copy()
@@ -52,6 +50,8 @@ SHADED_BLOCKS = {}
 for block_name in block_imgs:
     img = block_imgs[block_name]
     SHADED_BLOCKS[block_name] = [shade_block(img, ll) for ll in range(16)]
+
+SHADED_BLOCK_CACHE = {}
 
 
 class Block:
@@ -143,6 +143,10 @@ class Block:
                 l11 = (bott_l + righ_l)/2
                 l01 = (bott_l + left_l)/2
 
+                shaded_block_name = f'{self.type}{l00}{l10}{l11}{l01}'
+                if shaded_block_name in SHADED_BLOCK_CACHE:
+                    return SHADED_BLOCK_CACHE[shaded_block_name]
+
                 # experimental 3x3 shading
                 # colour_rect = pygame.Surface((3, 3)).convert_alpha()
                 # colour_rect.set_at((1, 1), light_level_to_color(self.light))
@@ -165,15 +169,12 @@ class Block:
 
                 img = orig_img.copy()
                 img.blit(colour_rect, (0, 0))
+                SHADED_BLOCK_CACHE[shaded_block_name] = img
         except:
             img = SHADED_BLOCKS[self.type][self.light]
 
         if self.damage == -1:
             return img
-
-
-
-
 
         # apply damage shader
         shaded_img = img.copy()

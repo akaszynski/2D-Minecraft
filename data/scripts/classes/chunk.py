@@ -39,10 +39,13 @@ class Chunk:
         self._generate_terrain(chunk_loaded)
 
     def draw(self, display):
-        for block in self:
-            if block.light:
-                display.blit(block.img, block.get_scrolled_pos(scroll))
-            else:
+        if self._world.player_position:
+            y_pos = self._world.player_position[1]
+            for x in range(CHUNK_SIZE):
+                for block in self.vertical_stack(x)[y_pos - 9:y_pos + 12]:
+                    display.blit(block.img, block.get_scrolled_pos(scroll))
+        else:
+            for block in self:
                 display.blit(block.img, block.get_scrolled_pos(scroll))
 
     @property

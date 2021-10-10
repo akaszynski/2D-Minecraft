@@ -40,6 +40,7 @@ class Terrain:
         self._threaded = threaded
         self._lighting_changed = True
         self._lighting = lighting
+        self._player_position = None
 
         # initialze world
         if initialize and threaded:
@@ -163,6 +164,14 @@ class Terrain:
 
             self._lighting_changed = False
 
+    @property
+    def player_position(self):
+        return self._player_position
+
+    @player_position.setter
+    def player_position(self, value):
+        self._player_position = value
+
     def update(self, player):
         self.generate_hitbox(player)
 
@@ -176,7 +185,6 @@ class Terrain:
         else:
             for block in self:
                 block.light = 15
-
 
         # # remove placed blocks if air below
         # for i, block in enumerate(self.map):
