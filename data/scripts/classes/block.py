@@ -134,9 +134,9 @@ class Block:
     def ul_light(self):
         lights = [
                 self.light,
-                self.left.light,
-                self.left.above.light,
-                self.above.light
+                self.left.illumination,
+                self.left.above.illumination,
+                self.above.illumination
         ]
         return avg_lighting(lights)
 
@@ -144,9 +144,9 @@ class Block:
     def ur_light(self):
         lights = [
                 self.light,
-                self.above.light,
-                self.above.right.light,
-                self.right.light,
+                self.above.illumination,
+                self.above.right.illumination,
+                self.right.illumination,
         ]
         return avg_lighting(lights)
 
@@ -154,9 +154,9 @@ class Block:
     def lr_light(self):
         lights = [
                 self.light,
-                self.right.light,
-                self.right.below.light,
-                self.below.light,
+                self.right.illumination,
+                self.right.below.illumination,
+                self.below.illumination,
         ]
         return avg_lighting(lights)
 
@@ -164,9 +164,9 @@ class Block:
     def ll_light(self):
         lights = [
                 self.light,
-                self.below.light,
-                self.below.left.light,
-                self.left.light,
+                self.below.illumination,
+                self.below.left.illumination,
+                self.left.illumination,
         ]
         return avg_lighting(lights)
 

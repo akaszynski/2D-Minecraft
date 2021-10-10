@@ -85,6 +85,7 @@ class Chunk:
     def update_sky_lighting(self):
         for x in range(CHUNK_SIZE):
             for block in self.vertical_stack(x):
+                block.light = 15
                 if block.type not in ['air', 'water']:
                     break
                 block.illumination = 15
