@@ -72,12 +72,22 @@ class Chunk:
         else:
             raise IndexError('Only 1 or 2D indexing available')
 
+    # more realistic lighting style
     def update_sky_lighting(self):
         for x in range(CHUNK_SIZE):
             for block in self.vertical_stack(x):
+                block.light = 15
                 if block.type not in ['air', 'water']:
+                    block.above.illumination = 15
                     break
-                block.illumination = 15
+
+    # minecraft-like lighting style
+    # def update_sky_lighting(self):
+    #     for x in range(CHUNK_SIZE):
+    #         for block in self.vertical_stack(x):
+    #             if block.type not in ['air', 'water']:
+    #                 break
+    #             block.illumination = 15
 
     def vertical_stack(self, x):
         """Return a vertical strip of blocks"""
