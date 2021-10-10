@@ -19,10 +19,24 @@ MIN_ACTION_TIME = 0.05  # effectively 20 ticks
 LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
+font = pygame.font.Font('data/fonts/minecraft_font.ttf', 30)
+
 
 def quit_game():
     pygame.quit()
     sys.exit()
+
+
+class Text:
+
+    def __init__(self, text, x, y):
+        # used to print the status of the variables
+        self._text = font.render(text, True, (0, 0, 0))
+        self._text_rect = self._text.get_rect()
+        self._text_rect.topleft = (x, y)
+
+    def draw(self, screen):
+        screen.blit(self._text, self._text_rect)
 
 
 def process_inventory(player, terrain, hotbar, inventory):
@@ -127,14 +141,16 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
     clock = pygame.time.Clock()
 
     if full_screen:
-        raise NotImplementedError('Full screen not implemented')
-
-    if window_size is None:
-        # still windowed and not genuinely full screen
+        flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE
+        screen = pygame.display.set_mode((0, 0), flags)
         info = pygame.display.Info()
-        window_size = info.current_w, info.current_h - 50
-
-    screen = pygame.display.set_mode(window_size)
+        window_size = info.current_w, info.current_h
+    else:
+        if window_size is None:
+            # still windowed and not genuinely full screen
+            info = pygame.display.Info()
+            window_size = info.current_w, info.current_h - 50
+        screen = pygame.display.set_mode(window_size)
 
     terrain = Terrain(lighting=lighting)
     start_x = 0
@@ -150,8 +166,11 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
     inventory = Inventory(window_size)
 
     last_action_time = 0
+    t_last_fps = 0
+    text = None
     while True:
         clock.tick(60)
+        t_start = time.time()
 
         time_since_last_action = time.time() - last_action_time
         if time_since_last_action > MIN_ACTION_TIME:
@@ -180,6 +199,17 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
             player.update(terrain)
             hotbar.update()
 
-        draw(screen, terrain, player, hotbar, inventory)
+        items = [terrain, player, hotbar, inventory]
+        if text:
+            items.append(text)
 
-        # print(str(int(clock.get_fps())))
+        terrain.player_position = player.coords
+        draw(screen, items)
+
+        show_fps = True
+        if show_fps:
+            if time.time() - t_last_fps > 1:
+                t_last_fps = time.time()
+                t_total = time.time() - t_start
+                t_fps = 1/t_total
+                text = Text(f"Theoretical FPS: {t_fps:.0f}", 20, 20)

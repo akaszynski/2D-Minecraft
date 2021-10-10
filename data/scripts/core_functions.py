@@ -8,7 +8,7 @@ COLLISION_TYPES = {
 }
 
 
-def draw(display, *classes):
+def draw(display, *classes, text=''):
     # this is the background color
     display.fill((135, 206, 235))  # skyblue
 
