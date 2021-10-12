@@ -86,7 +86,7 @@ class Chunk:
         for x in range(CHUNK_SIZE):
             for block in self.vertical_stack(x):
                 block.light = 15
-                if block.type not in ['air', 'water']:
+                if block.type not in ['air', 'torch']:
                     break
                 block.illumination = 15
 

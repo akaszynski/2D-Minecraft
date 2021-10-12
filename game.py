@@ -162,7 +162,11 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
     scroll[0] = (player.rect.x - scroll[0] - (window_size[0]/2 + player.width/2 - 50))
     scroll[1] = (player.rect.y - scroll[1] - (window_size[1]/2 + player.height/2 - 100))
 
+    # initialze hotbar and inventory
     hotbar = Hotbar(window_size)
+    # give player an initial inventory of torches
+    hotbar.add_block_to_slot('torch', 64)
+
     inventory = Inventory(window_size)
 
     last_action_time = 0
