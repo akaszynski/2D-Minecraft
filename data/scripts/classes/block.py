@@ -38,6 +38,18 @@ BLACK = pygame.Surface(BLOCK_TEXTURE_SZ)
 BLACK.fill((0, 0, 0))
 
 
+def avg_lighting(lights):
+    t_light = 0
+    n_light = 0
+    for value in lights:
+        if value:
+            t_light += value
+            n_light += 1
+    if not n_light:
+        return 0
+    return t_light/n_light
+
+
 def shade_block(img, light_level):
     if light_level == 15:
         return img.copy()
@@ -118,60 +130,80 @@ class Block:
         elif self._illumination > 15:
             self._illumination = 15
 
-    def nlcon(self, light):
-        if not light:
-            return self.light
-        return light
+    @property
+    def ul_light(self):
+        lights = [
+                self.light,
+                self.left.illumination,
+                self.left.above.illumination,
+                self.above.illumination
+        ]
+        return avg_lighting(lights)
+
+    @property
+    def ur_light(self):
+        lights = [
+                self.light,
+                self.above.illumination,
+                self.above.right.illumination,
+                self.right.illumination,
+        ]
+        return avg_lighting(lights)
+
+    @property
+    def lr_light(self):
+        lights = [
+                self.light,
+                self.right.illumination,
+                self.right.below.illumination,
+                self.below.illumination,
+        ]
+        return avg_lighting(lights)
+
+    @property
+    def ll_light(self):
+        lights = [
+                self.light,
+                self.below.illumination,
+                self.below.left.illumination,
+                self.left.illumination,
+        ]
+        return avg_lighting(lights)
 
     @property
     def img(self):
-        if not self.light:
-            return BLACK
+        if self.type != 'air':
+            if not self.light:
+                return BLACK
 
         orig_img = block_imgs[self.type]
 
-        try:
-            abov_l = self.nlcon(self.above.light)
-            righ_l = self.nlcon(self.right.light)
-            bott_l = self.nlcon(self.below.light)
-            left_l = self.nlcon(self.left.light)
-            if abov_l == righ_l == bott_l == left_l:
-                img = SHADED_BLOCKS[self.type][self.light]
-            else:
-                l00 = (abov_l + left_l)/2
-                l10 = (abov_l + righ_l)/2
-                l11 = (bott_l + righ_l)/2
-                l01 = (bott_l + left_l)/2
+        l00 = self.ul_light
+        l10 = self.ur_light
+        l11 = self.lr_light
+        l01 = self.ll_light
 
-                shaded_block_name = f'{self.type}{l00}{l10}{l11}{l01}'
-                if shaded_block_name in SHADED_BLOCK_CACHE:
-                    return SHADED_BLOCK_CACHE[shaded_block_name]
-
-                # experimental 3x3 shading
-                # colour_rect = pygame.Surface((3, 3)).convert_alpha()
-                # colour_rect.set_at((1, 1), light_level_to_color(self.light))
-                # colour_rect.set_at((0, 0), light_level_to_color(l00))
-                # colour_rect.set_at((1, 0), light_level_to_color(abov_l))
-                # colour_rect.set_at((2, 0), light_level_to_color(l10))
-                # colour_rect.set_at((2, 1), light_level_to_color(righ_l))
-                # colour_rect.set_at((2, 2), light_level_to_color(l11))
-                # colour_rect.set_at((1, 2), light_level_to_color(bott_l))
-                # colour_rect.set_at((0, 2), light_level_to_color(l01))
-                # colour_rect.set_at((0, 1), light_level_to_color(left_l))
-
-                colour_rect = pygame.Surface((2, 2)).convert_alpha()
-                colour_rect.set_at((0, 0), light_level_to_color(l00))
-                colour_rect.set_at((1, 0), light_level_to_color(l10))
-                colour_rect.set_at((1, 1), light_level_to_color(l11))
-                colour_rect.set_at((0, 1), light_level_to_color(l01))
-
-                colour_rect = pygame.transform.smoothscale(colour_rect, BLOCK_TEXTURE_SZ)
-
-                img = orig_img.copy()
-                img.blit(colour_rect, (0, 0))
-                SHADED_BLOCK_CACHE[shaded_block_name] = img
-        except:
+        if l00 == l10 == l11 == l01:
             img = SHADED_BLOCKS[self.type][self.light]
+        else:
+
+            shaded_block_name = f'{self.type}{l00}{l10}{l11}{l01}'
+            if shaded_block_name in SHADED_BLOCK_CACHE:
+                return SHADED_BLOCK_CACHE[shaded_block_name]
+
+            colour_rect = pygame.Surface((2, 2)).convert_alpha()
+            colour_rect.set_at((0, 0), light_level_to_color(l00))
+            colour_rect.set_at((1, 0), light_level_to_color(l10))
+            colour_rect.set_at((1, 1), light_level_to_color(l11))
+            colour_rect.set_at((0, 1), light_level_to_color(l01))
+
+            colour_rect = pygame.transform.smoothscale(
+                colour_rect, BLOCK_TEXTURE_SZ
+            )
+
+            img = orig_img.copy()
+            img.blit(colour_rect, (0, 0))
+            SHADED_BLOCK_CACHE[shaded_block_name] = img
 
         if self.damage == -1:
             return img
@@ -225,7 +257,6 @@ class Block:
 
     def flood_light(self):
         """Light up the surrounding blocks using the flood fill algorithm"""
-        self.light = self.illumination
         self.above.illumiate(self.illumination - 1)
         self.below.illumiate(self.illumination - 1)
         self.left.illumiate(self.illumination - 1)
