@@ -133,6 +133,7 @@ class Chunk:
         emerald = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=1, max_height=32,
         )
+        
 
         for y in range(y_dim):
             for x in range(x_dim):

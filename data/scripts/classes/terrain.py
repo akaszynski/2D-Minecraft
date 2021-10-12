@@ -15,7 +15,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 # blocks with no colisions
-NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water']
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch']
 
 
 def threaded(func):
@@ -153,10 +153,19 @@ class Terrain:
             for block in self:
                 block.illumination = 0
                 block.light = 0
-
+            
+            for block in self:
+                if block.type == 'torch':
+                    block.illumination = 14
+                if block.type == 'glowstone':
+                    block.illumination = 15
+            
             LOG.debug('Updating lighting')
-            for chunk in self.chunks.values():
-                chunk.update_sky_lighting()
+            try:
+                for chunk in self.chunks.values():
+                    chunk.update_sky_lighting()
+            except:
+                    pass
 
             for block in self:
                 if block.illumination:
@@ -177,6 +186,7 @@ class Terrain:
 
         if player.chunk_changed:
             LOG.debug('Chunk changed')
+            
             self._update_chunks(player.current_chunk)
             self._lighting_changed = True
 

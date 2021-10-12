@@ -27,6 +27,12 @@ class Stone(Block):
         self.hardness = 1.5
         self.harvest = ['pickaxe']
 
+class GlowStone(Block):
+
+    def __init__(self):
+        self.hardness = 1.5
+        self.harvest = ['pickaxe']
+
 
 class Ore(Block):
     
@@ -127,6 +133,12 @@ class Log(Block):
         self.hardness = 2
         self.harvest = [None, 'axe']
 
+class CraftingTable(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+
 class BookShelf(Block):
 
     def __init__(self):
@@ -176,4 +188,6 @@ blocks = {
     'bookshelf': BookShelf(),
     'torch': Torch(),
     'tnt': TNT(),
+    'glowstone': GlowStone(),
+    'crafting_table': CraftingTable(),
 }

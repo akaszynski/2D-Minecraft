@@ -31,7 +31,7 @@ class Text:
 
     def __init__(self, text, x, y):
         # used to print the status of the variables
-        self._text = font.render(text, True, (0, 0, 0))
+        self._text = font.render(text, True, (255, 255, 255))
         self._text_rect = self._text.get_rect()
         self._text_rect.topleft = (x, y)
 
@@ -206,10 +206,10 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
         terrain.player_position = player.coords
         draw(screen, items)
 
-        show_fps = True
-        if show_fps:
-            if time.time() - t_last_fps > 1:
-                t_last_fps = time.time()
-                t_total = time.time() - t_start
-                t_fps = 1/t_total
-                text = Text(f"Theoretical FPS: {t_fps:.0f}", 20, 20)
+        # show_fps = True
+        # if show_fps:
+        #     if time.time() - t_last_fps > 1:
+        t_last_fps = time.time()
+        t_total = time.time() - t_start
+        t_fps = 1/t_total
+        text = Text(f"cordinants: {player.coords[0]}, " + f'{126 - player.coords[1]}', 0, 20)
