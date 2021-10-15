@@ -155,6 +155,8 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
     terrain = Terrain(lighting=lighting)
     start_x = 0
     start_y = terrain.ground_level(start_x) - 2
+    
+    
 
     player = Player(
         (start_x, start_y), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13, creative=creative
@@ -164,6 +166,8 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
 
     hotbar = Hotbar(window_size)
     inventory = Inventory(window_size)
+    
+    hotbar.add_block_to_slot('torch', 64)
 
     last_action_time = 0
     t_last_fps = 0

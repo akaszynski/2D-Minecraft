@@ -48,7 +48,7 @@ class Player:
         self._current_block_ticks = 0
 
         # current user tool
-        self._current_tool = 'pickaxe'
+        self._current_tool = None
         self._chunk_changed = False
 
         self._previous_coords = None

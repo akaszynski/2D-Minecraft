@@ -65,7 +65,6 @@ class Hotbar:
             self.slot_contents[slot] = [block_type, amount]
         else:
             self.slot_contents[slot][1] += amount
-          
 
     def toggle(self):
         self._show = not self._show

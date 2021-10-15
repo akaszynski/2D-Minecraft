@@ -157,6 +157,8 @@ class Chunk:
                 elif y == ground:
                     if y < WATER_LEVEL - 20:
                         tile_type = 'grass_block_snow'
+                    elif y > WATER_LEVEL - 1:
+                        tile_type = 'sand'
                     elif y < WATER_LEVEL + 2:
                         tile_type = 'grass_block'
                     else:
