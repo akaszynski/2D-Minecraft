@@ -250,7 +250,7 @@ class Block:
         if light > self.light:
             self.light = light
 
-        if self.type == 'air':
+        if self.type in ['air', 'torch', 'water']:
             if light > self.illumination:
                 self.illumination = light
                 self.flood_light()

@@ -92,7 +92,7 @@ class Terrain:
         self.tile_rects = rects
 
     def draw(self, display):
-        for chunk in self.active_chunks.values():
+        for chunk in list(self.active_chunks.values()):
             chunk.draw(display)
 
     def generate_chunk(self, x):
@@ -151,21 +151,18 @@ class Terrain:
     def _update_lighting(self, force=False):
         if self._lighting_changed or force:
             for block in self:
-                block.illumination = 0
-                block.light = 0
-            
-            for block in self:
                 if block.type == 'torch':
                     block.illumination = 14
-                if block.type == 'glowstone':
+                    block.light = 14
+                elif block.type == 'glowstone':
                     block.illumination = 15
-            
+                else:
+                    block.illumination = 0
+                    block.light = 0
+
             LOG.debug('Updating lighting')
-            try:
-                for chunk in self.chunks.values():
-                    chunk.update_sky_lighting()
-            except:
-                    pass
+            for chunk in list(self.chunks.values()):
+                chunk.update_sky_lighting()
 
             for block in self:
                 if block.illumination:
