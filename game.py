@@ -1,6 +1,7 @@
 import logging
 import time
 import sys
+import random
 
 import pygame
 
@@ -11,7 +12,7 @@ from data.scripts.classes.inventory import Inventory
 
 from data.scripts.core_functions import draw, distance
 from data.variables import (
-    TILE_SIZE, scroll, SCROLL_STIFF, RENDER_DISTANCE
+    TILE_SIZE, scroll, SCROLL_STIFF, RENDER_DISTANCE, MAX_HEIGHT
 )
 
 MIN_ACTION_TIME = 0.05  # effectively 20 ticks
@@ -125,7 +126,7 @@ def process_actions(player, terrain, hotbar, inventory):
                     hotbar.selected_slot = 9
 
 
-def main(full_screen=False, window_size=None, creative=False, lighting=True):
+def main(full_screen=False, window_size=None, creative=False, lighting=True, cordinants=None):
     """Main program loop.
 
     Parameters
@@ -156,8 +157,8 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
     start_x = 0
     start_y = terrain.ground_level(start_x) - 2
     
+    pygame.display.set_caption('minecraft')
     
-
     player = Player(
         (start_x, start_y), TILE_SIZE-10, TILE_SIZE*2-10, 9, 13, creative=creative
     )
@@ -171,10 +172,9 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
 
     inventory = Inventory(window_size)
     
-    hotbar.add_block_to_slot('torch', 64)
 
     last_action_time = 0
-    t_last_fps = 0
+    t_last_fps = 100
     text = None
     while True:
         clock.tick(60)
@@ -220,4 +220,5 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True):
         t_last_fps = time.time()
         t_total = time.time() - t_start
         t_fps = 1/t_total
-        text = Text(f"cordinants: {player.coords[0]}, " + f'{126 - player.coords[1]}', 0, 20)
+        if cordinants == True:
+            text = Text(f"cordinants: {player.coords[0]}, " + f'{MAX_HEIGHT - 2 - player.coords[1]}', 0, 20)

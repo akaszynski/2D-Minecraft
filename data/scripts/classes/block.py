@@ -241,7 +241,7 @@ class Block:
 
     @property
     def left(self):
-        """Return the block to the right of this block"""
+        """Return the block to the left of this block"""
         if self._chunk_coords[0] == 0:
             return self._chunk._world.chunks[self.chunk - 1][CHUNK_SIZE - 1, self._chunk_coords[1]]
         return self._chunk[self._chunk_coords[0] - 1, self._chunk_coords[1]]

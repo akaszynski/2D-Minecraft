@@ -27,6 +27,12 @@ class Stone(Block):
         self.hardness = 1.5
         self.harvest = ['pickaxe']
 
+class CobbleStone(Block):
+
+    def __init__(self):
+        self.hardness = 1.5
+        self.harvest = ['pickaxe']
+
 class GlowStone(Block):
 
     def __init__(self):
@@ -76,7 +82,15 @@ class Air(Block):
         self.harvest = [None]
 
 
+
+
 class Water(Block):
+
+    def __init__(self):
+        self.hardness = 0
+        self.harvest = [None]
+
+class Lava(Block):
 
     def __init__(self):
         self.hardness = 0
@@ -190,4 +204,6 @@ blocks = {
     'tnt': TNT(),
     'glowstone': GlowStone(),
     'crafting_table': CraftingTable(),
+    'lava': Lava(),
+    'cobblestone': CobbleStone(),
 }

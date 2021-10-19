@@ -62,15 +62,17 @@ class Chunk:
         return iter(self.map)
 
     def __getitem__(self, index):
-
-        if isinstance(index, int):
-            return self.map
-        if len(index) == 1:
-            return self.map(index[0])
-        elif len(index) == 2:
-            return self.map[index[0] + index[1]*self.shape[0]]
-        else:
-            raise IndexError('Only 1 or 2D indexing available')
+        try:
+            if isinstance(index, int):
+                return self.map
+            if len(index) == 1:
+                return self.map(index[0])
+            elif len(index) == 2:
+                return self.map[index[0] + index[1]*self.shape[0]]
+            else:
+                raise IndexError('Only 1 or 2D indexing available')
+        except:
+            pass
 
     # more realistic lighting style
     # def update_sky_lighting(self):
@@ -121,28 +123,31 @@ class Chunk:
                                               x_dim, amp=40)
 
         coal = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=127,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=MAX_HEIGHT - 128 + 127,
         )
         iron = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=MAX_HEIGHT - 128 + 63,
         )
         diamond = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=MAX_HEIGHT - 128 + 16,
         )
         gold = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=MAX_HEIGHT - 128 + 32,
         )
         lapis = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=MAX_HEIGHT - 128 + 32,
         )
         redstone = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=MAX_HEIGHT - 128 + 16,
         )
         dirt = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=20, max_height=128,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=20, max_height=MAX_HEIGHT - 128 + 128,
         )
         emerald = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=1, max_height=32,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=1, max_height=MAX_HEIGHT - 128 + 32,
+        )
+        lava = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=10, max_height=MAX_HEIGHT - 128 + 24,
         )
         
 
@@ -152,6 +157,8 @@ class Chunk:
                 tile_type = 'air'
                 if y == MAX_HEIGHT - 1:
                     tile_type = 'bedrock'
+                elif y > MAX_HEIGHT - 16:
+                    tile_type = 'lava'
                 elif y < ground and y > WATER_LEVEL:
                     tile_type = 'water'
                 elif y == ground:
@@ -185,6 +192,11 @@ class Chunk:
                             tile_type = 'dirt'
                         elif flat_ind in emerald:
                             tile_type = 'emerald_ore'
+                        elif flat_ind in lava:
+                            if y > MAX_HEIGHT - 144:
+                                tile_type = 'lava'
+                            else:
+                                tile_type = 'air'
 
                 target_x = self._x*CHUNK_SIZE + x
                 block = Block(

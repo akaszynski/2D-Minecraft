@@ -48,7 +48,7 @@ class Player:
         self._current_block_ticks = 0
 
         # current user tool
-        self._current_tool = None
+        self._current_tool = 'pickaxe'
         self._chunk_changed = False
 
         self._previous_coords = None
@@ -157,13 +157,15 @@ class Player:
             block_type = self.selected_block.type
             if block_type in ['grass_block', 'grass_block_snow']:
                 block_type = 'dirt'
+            if block_type == 'stone':
+                block_type = 'cobblestone'
             self.inventory.append(block_type)
             hotbar.add_block_to_slot(block_type, 1)
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):
         self.current_animation = 'place'
-        if self.selected_block and self.selected_block.type in ['air', 'water']:
+        if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
             # if self.selected_block and self.selected_block.type == 'tnt':
             #     terrain.remove_block(self.selected_block.pos)
             if hotbar.selected_slot_content != []:

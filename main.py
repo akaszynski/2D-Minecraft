@@ -5,7 +5,11 @@ import argparse
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='femorph')
-
+    
+    parser.add_argument('--cordinants',
+                        help='Run with cordinants',
+                        action="store_true")
+    
     parser.add_argument('--full_screen',
                         help='Run in full screen',
                         action="store_true")
@@ -46,5 +50,6 @@ if __name__ == '__main__':
         full_screen=bool(args.full_screen),
         window_size=args.window_size,
         creative=bool(args.creative),
-        lighting=not bool(args.no_lighting)
+        lighting=not bool(args.no_lighting),
+        cordinants=bool(args.cordinants)
     )

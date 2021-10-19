@@ -88,7 +88,7 @@ class Hotbar:
                 display.blit(self.block_preview_imgs[n[0]], centering_rect.topleft)
 
                 if n[1] > 1:
-                    font_render = font.render(str(n[1]), True, (200, 200, 200))
+                    font_render = pygame.font.Font('data/fonts/minecraft_font.ttf', 23).render(str(n[1]), True, (200, 200, 200))
                     font_centering_rect = font_render.get_rect()
                     font_centering_rect.bottomright = centering_rect.bottomright
                     display.blit(font_render, font_centering_rect.topleft)
