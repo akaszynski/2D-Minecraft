@@ -168,7 +168,7 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
     # initialze hotbar and inventory
     hotbar = Hotbar(window_size)
     # give player an initial inventory of torches
-    hotbar.add_block_to_slot('torch', 64)
+    hotbar.add_block_to_slot('scaffolding', 64)
 
     inventory = Inventory(window_size)
     
@@ -206,6 +206,8 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
             terrain.update(player)
             player.update(terrain)
             hotbar.update()
+            
+            
 
         items = [terrain, player, hotbar, inventory]
         if text:

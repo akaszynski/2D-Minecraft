@@ -31,7 +31,7 @@ def threaded(func):
 
 class Terrain:
 
-    def __init__(self, initialize=True, threaded=True, lighting=True):
+    def __init__(self, initialize=True, threaded=True, lighting=False):
         self.tile_rects = []
         self.placed_blocks = []
         self.chunks = {}  # all chunks
@@ -72,7 +72,7 @@ class Terrain:
         for block in self:
             if block.pos == block_pos:
                 if block_type not in ['tulip', 'grass']:
-                    if block.type in ['air', 'water']:
+                    if block.type in ['air', 'water', 'lava']:
                         block.type = block_type
                         self.placed_blocks.append(block)
                         self._lighting_changed = True
@@ -164,7 +164,7 @@ class Terrain:
 
             LOG.debug('Updating lighting')
             for chunk in list(self.chunks.values()):
-                chunk.update_sky_lighting()
+                chunk.update_sky_lighting(14)
 
             for block in self:
                 if block.illumination:

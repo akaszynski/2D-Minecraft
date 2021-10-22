@@ -12,6 +12,7 @@ class Block:
     """Class for Block information."""
     hardness: float
     harvest: list
+    placeable: bool
 
 
 class Bedrock(Block):
@@ -19,6 +20,7 @@ class Bedrock(Block):
     def __init__(self):
         self.hardness = -1
         self.harvest = [None]
+        self.placeable = True
 
 
 class Stone(Block):
@@ -26,18 +28,21 @@ class Stone(Block):
     def __init__(self):
         self.hardness = 1.5
         self.harvest = ['pickaxe']
+        self.placeable = True
 
 class CobbleStone(Block):
 
     def __init__(self):
         self.hardness = 1.5
         self.harvest = ['pickaxe']
+        self.placeable = True
 
 class GlowStone(Block):
 
     def __init__(self):
         self.hardness = 1.5
         self.harvest = ['pickaxe']
+        self.placeable = True
 
 
 class Ore(Block):
@@ -45,6 +50,7 @@ class Ore(Block):
     def __init__(self):
         self.hardness = 3
         self.harvest = ['pickaxe']
+        self.placeable = True
 
 
 class CoalOre(Ore):
@@ -80,6 +86,7 @@ class Air(Block):
     def __init__(self):
         self.hardness = 0
         self.harvest = [None]
+        self.placeable = True
 
 
 
@@ -89,12 +96,14 @@ class Water(Block):
     def __init__(self):
         self.hardness = 0
         self.harvest = [None]
+        self.placeable = True
 
 class Lava(Block):
 
     def __init__(self):
         self.hardness = 0
         self.harvest = [None]
+        self.placeable = True
 
 
 class Grass(Block):
@@ -102,13 +111,28 @@ class Grass(Block):
     def __init__(self):
         self.hardness = 0.0001
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
+class SlimeBlock(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+
+class Scaffolding(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
 class Dirt(Block):
 
     def __init__(self):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
+        self.placeable = True
 
 
 class GrassBlock(Block):
@@ -116,6 +140,7 @@ class GrassBlock(Block):
     def __init__(self):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
+        self.placeable = True
 
 class SnowGrassBlock(Block):
 
@@ -129,12 +154,14 @@ class Flower(Block):
     def __init__(self):
         self.hardness = 0.0001
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
 class Torch(Block):
 
     def __init__(self):
         self.hardness = 0.0001
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
 
 class Tulip(Flower):
@@ -146,30 +173,35 @@ class Log(Block):
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+        self.placeable = True
 
 class CraftingTable(Block):
 
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+        self.placeable = True
 
 class BookShelf(Block):
 
     def __init__(self):
         self.hardness = 1.5
         self.harvest = [None, 'axe']
+        self.placeable = True
         
 class TNT(Block):
 
     def __init__(self):
         self.hardness = 0.0001
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
 class Sand(Block):
 
     def __init__(self):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
+        self.placeable = True
 
 
 class Leaf(Block):
@@ -177,6 +209,7 @@ class Leaf(Block):
     def __init__(self):
         self.hardness = 0.2
         self.harvest = [None, 'hoe']
+        self.placeable = True
 
 
 blocks = {
@@ -206,4 +239,6 @@ blocks = {
     'crafting_table': CraftingTable(),
     'lava': Lava(),
     'cobblestone': CobbleStone(),
+    'slime_block': SlimeBlock(),
+    'scaffolding': Scaffolding(),
 }

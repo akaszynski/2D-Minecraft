@@ -5,7 +5,7 @@ from ...variables import STACK_SIZE
 from ..core_functions import draw_rect_alpha
 
 imgs_dir = 'data/imgs/blocks'
-
+pygame.init()
 font = pygame.font.Font('data/fonts/minecraft_font.ttf', 23)
 
 class Hotbar:

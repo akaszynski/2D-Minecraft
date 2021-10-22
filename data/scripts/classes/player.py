@@ -6,6 +6,7 @@ from math import ceil
 from ..core_functions import move, distance
 from ...variables import GRAVITY_STRENGTH, TILE_SIZE, CHUNK_SIZE, scroll
 from ...blocks import blocks
+from data.scripts.classes.hotbar import Hotbar
 
 LOG = logging.getLogger(__name__)
 
@@ -164,14 +165,15 @@ class Player:
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):
-        self.current_animation = 'place'
-        if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
-            # if self.selected_block and self.selected_block.type == 'tnt':
-            #     terrain.remove_block(self.selected_block.pos)
-            if hotbar.selected_slot_content != []:
-                if hotbar.selected_slot_content[1] > 0:
-                    if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):
-                        hotbar.slot_contents[hotbar.selected_slot][1] -= 1
+        block = blocks[hotbar.selected_slot_content[0]]
+        if block.placeable:
+            if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
+                # if self.selected_block and self.selected_block.type == 'tnt':
+                #     terrain.remove_block(self.selected_block.pos)
+                if hotbar.selected_slot_content != []:
+                    if hotbar.selected_slot_content[1] > 0:
+                        if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):
+                            hotbar.slot_contents[hotbar.selected_slot][1] -= 1
 
     def load_animations(self, dir):
         animation_dict = {}
