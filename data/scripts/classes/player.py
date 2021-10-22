@@ -14,7 +14,7 @@ LOG = logging.getLogger(__name__)
 class Player:
 
     def __init__(
-            self, start_pos, width, height, vel, jump_height, reach_distance=4,
+            self, start_pos, width, height, vel, jump_height, reach_distance=5,
             creative=False
     ):
 
@@ -49,7 +49,7 @@ class Player:
         self._current_block_ticks = 0
 
         # current user tool
-        self._current_tool = 'pickaxe'
+        self._current_tool = None
         self._chunk_changed = False
 
         self._previous_coords = None
@@ -165,15 +165,18 @@ class Player:
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):
-        block = blocks[hotbar.selected_slot_content[0]]
-        if block.placeable:
-            if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
-                # if self.selected_block and self.selected_block.type == 'tnt':
-                #     terrain.remove_block(self.selected_block.pos)
-                if hotbar.selected_slot_content != []:
-                    if hotbar.selected_slot_content[1] > 0:
-                        if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):
-                            hotbar.slot_contents[hotbar.selected_slot][1] -= 1
+        try:
+            block = blocks[hotbar.selected_slot_content[0]]
+            if block.placeable:
+                if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
+                    # if self.selected_block and self.selected_block.type == 'tnt':
+                    #     terrain.remove_block(self.selected_block.pos)
+                    if hotbar.selected_slot_content != []:
+                        if hotbar.selected_slot_content[1] > 0:
+                            if terrain.add_block(self.selected_block.pos, hotbar.selected_slot_content[0]):
+                                hotbar.slot_contents[hotbar.selected_slot][1] -= 1
+        except:
+            pass
 
     def load_animations(self, dir):
         animation_dict = {}

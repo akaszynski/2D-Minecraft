@@ -168,7 +168,7 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
     # initialze hotbar and inventory
     hotbar = Hotbar(window_size)
     # give player an initial inventory of torches
-    hotbar.add_block_to_slot('scaffolding', 64)
+    hotbar.add_block_to_slot('paintingp', 64)
 
     inventory = Inventory(window_size)
     

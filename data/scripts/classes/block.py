@@ -9,6 +9,7 @@ pygame.display.set_mode()
 
 BLOCK_TEXTURE_SZ = (TILE_SIZE, TILE_SIZE)
 imgs_dir = 'data/imgs/blocks'
+imgs_dir2 = 'data/imgs/item'
 
 block_imgs = {}
 shaders = {}
@@ -36,6 +37,8 @@ light_shaders = [lighting_shader(ll) for ll in range(15)]
 
 BLACK = pygame.Surface(BLOCK_TEXTURE_SZ)
 BLACK.fill((0, 0, 0))
+
+TRANSPARENT_BLOCKS = ['air', 'torch', 'water', 'scaffolding', 'slime_block', 'glass', 'glass_pane', 'dark_oak_sign', 'paintingp']
 
 
 def avg_lighting(lights):
@@ -250,7 +253,7 @@ class Block:
         if light > self.light:
             self.light = light
 
-        if self.type in ['air', 'torch', 'water']:
+        if self.type in TRANSPARENT_BLOCKS:
             if light > self.illumination:
                 self.illumination = light
                 self.flood_light()

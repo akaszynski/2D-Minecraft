@@ -113,6 +113,14 @@ class Grass(Block):
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
         self.placeable = True
 
+
+class Painting(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+
 class SlimeBlock(Block):
 
     def __init__(self):
@@ -125,6 +133,20 @@ class Scaffolding(Block):
     def __init__(self):
         self.hardness = 0.0001
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+        
+class Glass(Block):
+
+    def __init__(self):
+        self.hardness = 0.03
+        self.harvest = []
+        self.placeable = True
+
+class Glass_Pane(Block):
+
+    def __init__(self):
+        self.hardness = 0.03
+        self.harvest = []
         self.placeable = True
 
 class Dirt(Block):
@@ -174,6 +196,21 @@ class Log(Block):
         self.hardness = 2
         self.harvest = [None, 'axe']
         self.placeable = True
+
+class OakPlanks(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
+class DarkOakSign(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
 
 class CraftingTable(Block):
 
@@ -241,4 +278,9 @@ blocks = {
     'cobblestone': CobbleStone(),
     'slime_block': SlimeBlock(),
     'scaffolding': Scaffolding(),
+    'glass': Glass(),
+    'glass_pane': Glass_Pane(),
+    'dark_oak_sign': DarkOakSign(),
+    'oak_planks': OakPlanks(),
+    'paintingp': Painting(),
 }

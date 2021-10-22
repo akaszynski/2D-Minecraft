@@ -4,6 +4,7 @@ import perlin
 from random import randint
 
 from .block import Block
+from data.scripts.classes.player import Player
 from .chunk import Chunk
 from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE
 from ...variables import RENDER_DISTANCE as RDIST
@@ -15,7 +16,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 # blocks with no colisions
-NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava']
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava', 'dark_oak_sign', 'paintingp']
 
 
 def threaded(func):
