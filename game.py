@@ -10,6 +10,7 @@ from data.scripts.classes.terrain import Terrain
 from data.scripts.classes.hotbar import Hotbar
 from data.scripts.classes.inventory import Inventory
 
+
 from data.scripts.core_functions import draw, distance
 from data.variables import (
     TILE_SIZE, scroll, SCROLL_STIFF, RENDER_DISTANCE, MAX_HEIGHT
@@ -168,7 +169,7 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
     # initialze hotbar and inventory
     hotbar = Hotbar(window_size)
     # give player an initial inventory of torches
-    hotbar.add_block_to_slot('paintingp', 64)
+    hotbar.add_block_to_slot('torch', 64)
 
     inventory = Inventory(window_size)
     

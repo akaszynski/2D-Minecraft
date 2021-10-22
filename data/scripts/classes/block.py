@@ -38,7 +38,7 @@ light_shaders = [lighting_shader(ll) for ll in range(15)]
 BLACK = pygame.Surface(BLOCK_TEXTURE_SZ)
 BLACK.fill((0, 0, 0))
 
-TRANSPARENT_BLOCKS = ['air', 'torch', 'water', 'scaffolding', 'slime_block', 'glass', 'glass_pane', 'dark_oak_sign', 'paintingp']
+TRANSPARENT_BLOCKS = ['air', 'torch', 'water', 'scaffolding', 'slime_block', 'glass', 'glass_pane', 'dark_oak_sign', 'paintingp', 'oak_leaf', 'fire', 'cake']
 
 
 def avg_lighting(lights):

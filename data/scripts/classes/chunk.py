@@ -8,7 +8,7 @@ from .block import Block
 from .tree import Tree
 from ...variables import (
     CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT, SEED,
-    scroll
+    scroll, JUNGLE
 )
 
 from . import generator
@@ -25,7 +25,7 @@ P_NOISE = Perlin(SEED)
 
 class Chunk:
 
-    def __init__(self, x, world, chunk_loaded=False, trees=False):
+    def __init__(self, x, world, chunk_loaded=False, trees=False, jungle=JUNGLE):
         LOG.debug("Creating chunk at %d", x)
         self.map = []
         self._tree_blocks = []
@@ -33,6 +33,7 @@ class Chunk:
         self._x = x
         self.shape = (CHUNK_SIZE, MAX_HEIGHT)
         self._world = world
+        self.jungle = jungle
 
         if trees:
             self._generate_trees()
@@ -88,7 +89,7 @@ class Chunk:
         for x in range(CHUNK_SIZE):
             for block in self.vertical_stack(x):
                 block.light = day_light
-                if block.type not in ['air']:
+                if block.type not in ['air', 'glass', 'glass_pane']:
                     break
                 block.illumination = day_light
 
@@ -149,12 +150,29 @@ class Chunk:
         lava = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=10, max_height=24,
         )
+        tree = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=100, max_height=96,
+        )
+        tree_log = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=25, max_height=96,
+        )
+        
         
 
         for y in range(y_dim):
             for x in range(x_dim):
                 ground = ground_level[x]
                 tile_type = 'air'
+                flat_ind = y*x_dim + x
+                
+                if self.jungle:
+                    if ground - 2 < WATER_LEVEL:
+                        if flat_ind in tree_log:
+                            tile_type = 'oak_log'
+                        elif flat_ind in tree:
+                            tile_type = 'oak_leaf'
+                else:
+                        tile_type = 'air'
                 ground += MAX_HEIGHT - 128
                 if y == MAX_HEIGHT - 1:
                     tile_type = 'bedrock'

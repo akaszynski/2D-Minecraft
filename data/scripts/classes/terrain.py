@@ -16,7 +16,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 # blocks with no colisions
-NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava', 'dark_oak_sign', 'paintingp']
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava', 'dark_oak_sign', 'paintingp', 'fire']
 
 
 def threaded(func):
@@ -158,6 +158,8 @@ class Terrain:
                 elif block.type == 'glowstone':
                     block.illumination = 15
                 elif block.type == 'lava':
+                    block.illumination = 15
+                elif block.type == 'fire':
                     block.illumination = 15
                 else:
                     block.illumination = 0

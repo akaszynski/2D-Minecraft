@@ -17,8 +17,12 @@ if __name__ == '__main__':
     parser.add_argument(
         '--creative',
         help="No ticks to break blocks",
-        action="store_true"
-    )
+        action="store_true")
+    
+    parser.add_argument('--jungle',
+                        help='Play with very large jungles',
+                        action="store_true")
+    
     parser.add_argument('--no_lighting', help="disable lighting", action="store_true")
     parser.add_argument('--window_size', nargs='+', type=int)
     parser.add_argument('--seed', type=int)
@@ -44,6 +48,9 @@ if __name__ == '__main__':
         if args.seed < 0:
             raise ValueError("Seed must be between 1 and 99999")
         variables.SEED = args.seed
+    
+    if bool(args.jungle):
+         variables.JUNGLE = args.jungle
 
     from game import main
     main(

@@ -44,6 +44,27 @@ class GlowStone(Block):
         self.harvest = ['pickaxe']
         self.placeable = True
 
+class Fire(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
+class Cake(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
+class LargeCake(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
 
 class Ore(Block):
     
@@ -87,9 +108,6 @@ class Air(Block):
         self.hardness = 0
         self.harvest = [None]
         self.placeable = True
-
-
-
 
 class Water(Block):
 
@@ -241,7 +259,7 @@ class Sand(Block):
         self.placeable = True
 
 
-class Leaf(Block):
+class Oak_leaf(Block):
 
     def __init__(self):
         self.hardness = 0.2
@@ -257,7 +275,7 @@ blocks = {
     'grass_block': GrassBlock(),
     'tulip': Tulip(),
     'oak_log': Log(),
-    'leaf': Leaf(),
+    'oak_leaf': Oak_leaf(),
     'bedrock': Bedrock(),
     'coal_ore': CoalOre(),
     'iron_ore': IronOre(),
@@ -283,4 +301,7 @@ blocks = {
     'dark_oak_sign': DarkOakSign(),
     'oak_planks': OakPlanks(),
     'paintingp': Painting(),
+    'fire': Fire(),
+    'cake': Cake(),
+    'large_cake': LargeCake(),
 }
