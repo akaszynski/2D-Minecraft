@@ -160,8 +160,24 @@ class Player:
                 block_type = 'dirt'
             if block_type == 'stone':
                 block_type = 'cobblestone'
+            if block_type == 'oak_leaf':
+                block_type = 'apple'
+            if block_type == 'coal_ore':
+                block_type = 'coal'
+            if block_type == 'diamond_ore':
+                block_type = 'diamond'
+            if block_type == 'redstone_ore':
+                block_type = 'redstone'
+            if block_type == 'lapis_ore':
+                block_type = 'lapis_lazuli'
+            amount = 1
+            if block_type == 'lapis_lazuli':
+                amount = 8
+            if block_type == 'redstone':
+                amount = 8
+            
             self.inventory.append(block_type)
-            hotbar.add_block_to_slot(block_type, 1)
+            hotbar.add_block_to_slot(block_type, amount)
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):

@@ -30,6 +30,13 @@ class Stone(Block):
         self.harvest = ['pickaxe']
         self.placeable = True
 
+class Furnace(Block):
+
+    def __init__(self):
+        self.hardness = 1.5
+        self.harvest = ['pickaxe']
+        self.placeable = True
+
 class CobbleStone(Block):
 
     def __init__(self):
@@ -59,6 +66,13 @@ class Cake(Block):
         self.placeable = True
 
 class LargeCake(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
+class LargeCakeInside(Block):
 
     def __init__(self):
         self.hardness = 0.00001
@@ -187,6 +201,7 @@ class SnowGrassBlock(Block):
     def __init__(self):
         self.hardness = 0.5
         self.harvest = [None, 'shovel']
+        self.placeable = True
 
 
 class Flower(Block):
@@ -228,6 +243,41 @@ class DarkOakSign(Block):
         self.hardness = 2
         self.harvest = [None, 'axe']
         self.placeable = True
+
+# items
+#########################################################
+class Item(Block):
+
+    def __init__(self):
+        self.hardness = 0
+        self.harvest = []
+        self.placeable = False
+
+class Apple(Item):
+    pass
+
+class Bow(Item):
+    pass
+
+class Diamond(Item):
+    pass
+
+class Coal(Item):
+    pass
+
+class Emerald(Item):
+    pass
+
+class Book(Item):
+    pass
+
+class Redstone(Item):
+    pass
+
+class LapusLazuli(Item):
+    pass
+
+#########################################################
 
 
 class CraftingTable(Block):
@@ -304,4 +354,16 @@ blocks = {
     'fire': Fire(),
     'cake': Cake(),
     'large_cake': LargeCake(),
+    'large_cake_inside': LargeCakeInside(),
+    'furnace': Furnace(),
+##################################################
+    'apple': Apple(),
+    'bow': Bow(),
+    'coal': Coal(),
+    'diamond': Diamond(),
+    'emerald': Emerald(),
+    'book': Book(),
+    'redstone': Redstone(),
+    'lapis_lazuli': LapusLazuli(),
+    
 }
