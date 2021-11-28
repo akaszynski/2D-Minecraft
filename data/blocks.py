@@ -30,6 +30,13 @@ class Stone(Block):
         self.harvest = ['pickaxe']
         self.placeable = True
 
+class SilverVirus(Block):
+
+    def __init__(self):
+        self.hardness = 1.5
+        self.harvest = ['pickaxe']
+        self.placeable = True
+
 class Furnace(Block):
 
     def __init__(self):
@@ -52,6 +59,20 @@ class GlowStone(Block):
         self.placeable = True
 
 class Fire(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
+class NetherPortal(Block):
+
+    def __init__(self):
+        self.hardness = 0.00001
+        self.harvest = []
+        self.placeable = True
+
+class SkyPortal(Block):
 
     def __init__(self):
         self.hardness = 0.00001
@@ -87,6 +108,13 @@ class Ore(Block):
         self.harvest = ['pickaxe']
         self.placeable = True
 
+class Obsidian(Block):
+    
+    def __init__(self):
+        self.hardness = 50
+        self.harvest = ['pickaxe']
+        self.placeable = True
+
 
 class CoalOre(Ore):
     pass
@@ -95,6 +123,8 @@ class CoalOre(Ore):
 class IronOre(Ore):
     pass
 
+class RubyOre(Ore):
+    pass
 
 class DiamondOre(Ore):
     pass
@@ -211,6 +241,20 @@ class Flower(Block):
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
         self.placeable = True
 
+class OakSapling(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+
+class DarkOakSapling(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+
 class Torch(Block):
 
     def __init__(self):
@@ -218,12 +262,32 @@ class Torch(Block):
         self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
         self.placeable = True
 
+class Cobweb(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = []
+        self.placeable = True
+    
+class Lantern(Block):
+
+    def __init__(self):
+        self.hardness = 1
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
 
 class Tulip(Flower):
     pass
 
 
-class Log(Block):
+class OakLog(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
+class DarkOakLog(Block):
 
     def __init__(self):
         self.hardness = 2
@@ -237,11 +301,39 @@ class OakPlanks(Block):
         self.harvest = [None, 'axe']
         self.placeable = True
 
+class DarkOakPlanks(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
+class OakFence(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
+class DarkOakFence(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'axe']
+        self.placeable = True
+
 class DarkOakSign(Block):
 
     def __init__(self):
         self.hardness = 2
         self.harvest = [None, 'axe']
+        self.placeable = True
+
+class DarkOakLeaves(Block):
+
+    def __init__(self):
+        self.hardness = 2
+        self.harvest = [None, 'hoe']
         self.placeable = True
 
 # items
@@ -277,6 +369,9 @@ class Redstone(Item):
 class LapusLazuli(Item):
     pass
 
+class Ruby(Item):
+    pass
+
 #########################################################
 
 
@@ -295,6 +390,13 @@ class BookShelf(Block):
         self.placeable = True
         
 class TNT(Block):
+
+    def __init__(self):
+        self.hardness = 0.0001
+        self.harvest = [None, 'axe', 'pickaxe', 'shovel', 'hoe']
+        self.placeable = True
+
+class ULTRATNT(Block):
 
     def __init__(self):
         self.hardness = 0.0001
@@ -324,7 +426,7 @@ blocks = {
     'dirt': Dirt(),
     'grass_block': GrassBlock(),
     'tulip': Tulip(),
-    'oak_log': Log(),
+    'oak_log': OakLog(),
     'oak_leaf': Oak_leaf(),
     'bedrock': Bedrock(),
     'coal_ore': CoalOre(),
@@ -356,6 +458,22 @@ blocks = {
     'large_cake': LargeCake(),
     'large_cake_inside': LargeCakeInside(),
     'furnace': Furnace(),
+    'oak_sapling': OakSapling(),
+    'ruby_ore': RubyOre(),
+    'nether_portal': NetherPortal(),
+    'sky_portal': SkyPortal(),
+    'obsidian': Obsidian(),
+    'silver_virus': SilverVirus(),
+    'oak_fence': OakFence(),
+    'lantern': Lantern(),
+    'cobweb': Cobweb(),
+    'dark_oak_planks': DarkOakPlanks(),
+    'dark_oak_fence': DarkOakFence(),
+    'dark_oak_sapling': DarkOakSapling(),
+    'dark_oak_leaf': DarkOakLeaves(),
+    'dark_oak_log': DarkOakLog(),
+    'quartz_block': CobbleStone(),
+    'ultra_tnt': ULTRATNT(),
 ##################################################
     'apple': Apple(),
     'bow': Bow(),
@@ -365,5 +483,6 @@ blocks = {
     'book': Book(),
     'redstone': Redstone(),
     'lapis_lazuli': LapusLazuli(),
+    'ruby': Ruby(),
     
 }

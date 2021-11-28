@@ -9,7 +9,7 @@ class Tree:
 
     def __init__(self, base_pos):
         self.base_pos = base_pos
-        self.trunk_height = random.randint(2, 5)
+        self.trunk_height = 5
         self.leaf_radius = 3
         self.blocks = []
 

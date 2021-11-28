@@ -23,6 +23,10 @@ if __name__ == '__main__':
                         help='Play with very large jungles',
                         action="store_true")
     
+    parser.add_argument('--island',
+                        help='Play with floating islands',
+                        action="store_true")
+    
     parser.add_argument('--no_lighting', help="disable lighting", action="store_true")
     parser.add_argument('--window_size', nargs='+', type=int)
     parser.add_argument('--seed', type=int)
@@ -51,6 +55,9 @@ if __name__ == '__main__':
     
     if bool(args.jungle):
          variables.JUNGLE = args.jungle
+    
+    if bool(args.island):
+         variables.ISLAND = args.island
 
     from game import main
     main(

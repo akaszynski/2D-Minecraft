@@ -6,8 +6,7 @@ from random import randint
 from .block import Block
 from data.scripts.classes.player import Player
 from .chunk import Chunk
-from ...variables import CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE
-from ...variables import RENDER_DISTANCE as RDIST
+from ...variables import RENDER_DISTANCE as RDIST, TILE_SIZE
 from ..core_functions import distance
 
 p = perlin.Perlin(randint(0, 99999))
@@ -16,7 +15,7 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel('DEBUG')
 
 # blocks with no colisions
-NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava', 'dark_oak_sign', 'paintingp', 'fire', 'cake', 'crafting_table', 'furnace']
+NON_COL_BLOCKS = ['air', 'grass', 'tulip', 'water', 'torch', 'lava', 'dark_oak_sign', 'paintingp', 'fire', 'cake', 'crafting_table', 'furnace', 'oak_sapling', 'nether_portal', 'sky_portal', 'cobweb']
 
 
 def threaded(func):
@@ -42,6 +41,7 @@ class Terrain:
         self._lighting_changed = True
         self._lighting = lighting
         self._player_position = None
+        
 
         # initialze world
         if initialize and threaded:
@@ -72,7 +72,7 @@ class Terrain:
     def add_block(self, block_pos, block_type):
         for block in self:
             if block.pos == block_pos:
-                if block_type not in ['tulip', 'grass']:
+                if block_type not in ['grass']:
                     if block.type in ['air', 'water', 'lava']:
                         block.type = block_type
                         self.placed_blocks.append(block)
@@ -154,8 +154,14 @@ class Terrain:
             for block in self:
                 if block.type == 'torch':
                     block.illumination = 14
+                if block.type == 'lantern':
+                    block.illumination = 14
                     block.light = 14
                 elif block.type == 'glowstone':
+                    block.illumination = 15
+                elif block.type == 'nether_portal':
+                    block.illumination = 15
+                elif block.type == 'sky_portal':
                     block.illumination = 15
                 elif block.type == 'lava':
                     block.illumination = 15
@@ -167,6 +173,7 @@ class Terrain:
 
             LOG.debug('Updating lighting')
             for chunk in list(self.chunks.values()):
+                
                 chunk.update_sky_lighting(14)
 
             for block in self:
@@ -197,7 +204,6 @@ class Terrain:
         else:
             for block in self:
                 block.light = 15
-
         # # remove placed blocks if air below
         # for i, block in enumerate(self.map):
         #     if block.type in ['tulip', 'grass']:

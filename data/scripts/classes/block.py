@@ -2,6 +2,7 @@ import pygame
 import os
 
 from ...variables import TILE_SIZE, MAX_HEIGHT, CHUNK_SIZE
+import random
 
 pygame.init()
 pygame.display.set_mode()
@@ -26,6 +27,8 @@ def light_level_to_color(light_level):
     return (0, 0, 0, (15 - light_level)*17)
 
 
+
+
 def lighting_shader(light_level):
     """Light level from 0 to 15"""
     light_shading = pygame.Surface(BLOCK_TEXTURE_SZ).convert_alpha()
@@ -38,7 +41,11 @@ light_shaders = [lighting_shader(ll) for ll in range(15)]
 BLACK = pygame.Surface(BLOCK_TEXTURE_SZ)
 BLACK.fill((0, 0, 0))
 
-TRANSPARENT_BLOCKS = ['air', 'torch', 'water', 'scaffolding', 'slime_block', 'glass', 'glass_pane', 'dark_oak_sign', 'paintingp', 'oak_leaf', 'fire', 'cake']
+TRANSPARENT_BLOCKS = ['air', 'torch', 'water', 
+                      'scaffolding', 'slime_block', 'glass', 'glass_pane', 
+                      'dark_oak_sign', 'paintingp', 'oak_leaf', 'fire', 
+                      'cake', 'oak_sapling', 'oak_fence', 'dark_oak_fence', 
+                      'cobweb', 'dark_oak_leaf']
 
 
 def avg_lighting(lights):
@@ -119,6 +126,7 @@ class Block:
             self._light = 0
         elif self._light > 15:
             self._light = 15
+        
 
     @property
     def illumination(self):
@@ -175,7 +183,7 @@ class Block:
 
     @property
     def img(self):
-        if self.type != 'air':
+        if self.type not in ['air', 'water']:
             if not self.light:
                 return BLACK
 

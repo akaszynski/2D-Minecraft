@@ -2,6 +2,7 @@ import logging
 import pygame
 import os
 from math import ceil
+import random
 
 from ..core_functions import move, distance
 from ...variables import GRAVITY_STRENGTH, TILE_SIZE, CHUNK_SIZE, scroll
@@ -161,28 +162,48 @@ class Player:
             if block_type == 'stone':
                 block_type = 'cobblestone'
             if block_type == 'oak_leaf':
-                block_type = 'apple'
+                if random.random() > 0.75:
+                    if random.random() > 0.8:
+                        block_type = 'apple'
+                    else:
+                        block_type = 'oak_sapling'
+                else:
+                    block_type = None
+            if block_type == 'dark_oak_leaf':
+                if random.random() > 0.75:
+                    if random.random() > 0.8:
+                        block_type = 'apple'
+                    else:
+                        block_type = 'dark_oak_sapling'
+                else:
+                    block_type = None
+                    
             if block_type == 'coal_ore':
                 block_type = 'coal'
             if block_type == 'diamond_ore':
                 block_type = 'diamond'
             if block_type == 'redstone_ore':
                 block_type = 'redstone'
+            if block_type == 'emerald_ore':
+                block_type = 'emerald'
             if block_type == 'lapis_ore':
                 block_type = 'lapis_lazuli'
+            if block_type == 'ruby_ore':
+                block_type = 'ruby'
             amount = 1
             if block_type == 'lapis_lazuli':
-                amount = 8
+                amount = 4
             if block_type == 'redstone':
-                amount = 8
+                amount = 4
             
             self.inventory.append(block_type)
-            hotbar.add_block_to_slot(block_type, amount)
+            if block_type != None:
+                hotbar.add_block_to_slot(block_type, amount)
         terrain.remove_block(self.selected_block.pos)
 
     def place_block(self, terrain, hotbar):
+        block = blocks[hotbar.selected_slot_content[0]]
         try:
-            block = blocks[hotbar.selected_slot_content[0]]
             if block.placeable:
                 if self.selected_block and self.selected_block.type in ['air', 'water', 'lava']:
                     # if self.selected_block and self.selected_block.type == 'tnt':

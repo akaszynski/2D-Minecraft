@@ -60,11 +60,14 @@ class Hotbar:
                 return i
 
     def add_block_to_slot(self, block_type, amount):
-        slot = self.get_available_slot(block_type)
-        if self.slot_contents[slot] == []:
-            self.slot_contents[slot] = [block_type, amount]
-        else:
-            self.slot_contents[slot][1] += amount
+        try:
+            slot = self.get_available_slot(block_type)
+            if self.slot_contents[slot] == []:
+                self.slot_contents[slot] = [block_type, amount]
+            else:
+                self.slot_contents[slot][1] += amount
+        except:
+            pass
 
     def toggle(self):
         self._show = not self._show

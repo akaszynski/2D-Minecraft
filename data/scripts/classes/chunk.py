@@ -8,12 +8,12 @@ from .block import Block
 from .tree import Tree
 from ...variables import (
     CHUNK_SIZE, TILE_SIZE, RENDER_DISTANCE, scroll, CHUNK_SIZE, MAX_HEIGHT, SEED,
-    scroll, JUNGLE
+    scroll, JUNGLE, ISLAND
 )
 
 from . import generator
 
-WATER_LEVEL = MAX_HEIGHT - 65
+WATER_LEVEL = MAX_HEIGHT - (64 + 1)
 
 
 LOG = logging.getLogger(__name__)
@@ -75,7 +75,7 @@ class Chunk:
         except:
             pass
 
-    # more realistic lighting style
+    # # more realistic lighting style
     # def update_sky_lighting(self):
     #     for x in range(CHUNK_SIZE):
     #         for block in self.vertical_stack(x):
@@ -122,6 +122,10 @@ class Chunk:
         # grassland
         ground_level = generator.ground_level(0.0175, SEED, self._x*CHUNK_SIZE,
                                               x_dim, amp=40)
+        air_level = generator.ground_level(0.0175, SEED + 100, self._x*CHUNK_SIZE,
+                                              x_dim, amp=40)
+        bedrock_level = generator.ground_level(3, SEED, self._x*CHUNK_SIZE,
+                                              x_dim, amp=2)
 
         coal = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=5, max_height=127,
@@ -130,7 +134,10 @@ class Chunk:
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=4, max_height=63,
         )
         diamond = generator.blob(
-            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=16,
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=2, max_height=16,
+        )
+        ruby = generator.blob(
+            x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=2, max_height=16,
         )
         gold = generator.blob(
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=3, max_height=32,
@@ -157,36 +164,45 @@ class Chunk:
             x_dim, y_dim, self._x*CHUNK_SIZE, SEED, self._x, n=25, max_height=96,
         )
         
-        
+        air_size = 750
+        if ISLAND:
+            air_size = 75
 
         for y in range(y_dim):
             for x in range(x_dim):
                 ground = ground_level[x]
+                air = air_level[x]
+                bedrock = bedrock_level[x]
                 tile_type = 'air'
                 flat_ind = y*x_dim + x
                 
+                
                 if self.jungle:
-                    if ground - 2 < WATER_LEVEL:
+                    if ground < WATER_LEVEL:
                         if flat_ind in tree_log:
-                            tile_type = 'oak_log'
+                            tile_type = 'dark_oak_log'
                         elif flat_ind in tree:
-                            tile_type = 'oak_leaf'
+                            tile_type = 'dark_oak_leaf'
                 else:
                         tile_type = 'air'
                 ground += MAX_HEIGHT - 128
-                if y == MAX_HEIGHT - 1:
+                if y > MAX_HEIGHT + 51 - bedrock:
                     tile_type = 'bedrock'
+                
+                elif y > WATER_LEVEL - air + air_size:
+                    tile_type = 'air'
                 elif y < ground and y > WATER_LEVEL:
                     tile_type = 'water'
-                elif y == ground:
-                    if y < WATER_LEVEL - 20:
-                        tile_type = 'grass_block_snow'
-                    elif y > WATER_LEVEL - 1:
-                        tile_type = 'sand'
-                    elif y < WATER_LEVEL + 2:
-                        tile_type = 'grass_block'
-                    else:
-                        tile_type = 'dirt'
+                
+                if y == ground:
+                        if y < WATER_LEVEL - 20:
+                            tile_type = 'grass_block_snow'
+                        elif y < WATER_LEVEL:
+                            tile_type = 'grass_block'
+                        elif y > WATER_LEVEL - 2:
+                            tile_type = 'sand'
+                        else:
+                            tile_type = 'dirt'
                 elif y > ground:
                     if y < ground + 3:
                         tile_type = 'dirt'
@@ -209,11 +225,16 @@ class Chunk:
                             tile_type = 'dirt'
                         elif flat_ind in emerald:
                             tile_type = 'emerald_ore'
+                        elif flat_ind in ruby:
+                            tile_type = 'ruby_ore'
                         elif flat_ind in lava:
                             if y > MAX_HEIGHT - 144:
                                 tile_type = 'lava'
                             else:
                                 tile_type = 'air'
+                
+                
+                        
 
                 target_x = self._x*CHUNK_SIZE + x
                 block = Block(

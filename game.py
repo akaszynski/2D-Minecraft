@@ -97,6 +97,7 @@ def process_actions(player, terrain, hotbar, inventory):
             if event.key == pygame.K_e:
                 inventory.toggle()
                 hotbar.toggle()
+            
             if event.key == pygame.K_SPACE or event.key == pygame.K_w:
                 player.jumping = True
 
@@ -169,7 +170,13 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
     # initialze hotbar and inventory
     hotbar = Hotbar(window_size)
     # give player an initial inventory of torches
-    hotbar.add_block_to_slot('torch', 64)
+    hotbar.add_block_to_slot('glowstone', 64)
+    hotbar.add_block_to_slot('glass', 64)
+    hotbar.add_block_to_slot('dark_oak_planks', 64)
+    hotbar.add_block_to_slot('dark_oak_fence', 64)
+    hotbar.add_block_to_slot('large_cake', 64)
+    hotbar.add_block_to_slot('cobblestone', 64)
+    hotbar.add_block_to_slot('cobweb', 64)
 
     inventory = Inventory(window_size)
     
@@ -190,6 +197,9 @@ def main(full_screen=False, window_size=None, creative=False, lighting=True, cor
             else:
                 process_actions(player, terrain, hotbar, inventory)
             last_action_time = time.time()
+        
+        ground = pygame.Rect(0, 10, 100000, 100000)
+        pygame.draw.rect(screen, (255, 255, 255), ground)
 
         # Process player and terrain only if inventory hidden
         if not inventory.visible:
